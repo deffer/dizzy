@@ -1,34 +1,36 @@
-function printHello()   
-	DEFAULT_CHAT_FRAME:AddMessage("Dizzy is here...")
+Dizzy = {}
+
+Dizzy.CacheItem = function(ilink)
+	local name, link,
+	quality, iLevel, reqLevel,
+	iclass, isubclass,
+	maxStack, equipSlot, texture, vendorPrice = GetItemInfo(ilink)
+	Dizzy.LastSeen = {Name = name, Link = link, 
+		Class = iclass, SubClass = isubclass, 
+		ItemLevel = iLevel, ReqLevel = reqLevel,
+		IsItemOfInterest = Dizzy.IsItemOfInterest(iclass, isubclass)}
 end
 
-function Dizzy_GetID(ilink)
+Dizzy.IsItemHot = function()
+	-- TODO implement
+	if (reqLevel < 81 and iLevel > 272) then
+		return true
+	else
+		return false
+	end
+end
+
+Dizzy.IsItemOfInterest = function(iclass, isubclass)
+	return (iclass == "Weapon" or iclass == "Armor")
+	  and not (isubclass == "Fishing Poles")
+end
+
+Dizzy.GetID = function(ilink)
 	local _,_,iid = strfind(ilink,"|Hitem:(%d+):")
 	return tonumber(iid)
 end
 
-DIZZY_DEBUG_FRAME = nil;
-local function CreateDebugFrameMultiline()
-	local f=CreateFrame("ScrollFrame", "DizzyDebugBox", UIParent, "InputScrollFrameTemplate")
-	f:SetSize(300,300)
-	-- f:SetPoint("CENTER")
-	f:SetPoint("LEFT")
-	f.EditBox:SetFontObject("ChatFontNormal")
-	f.EditBox:SetMaxLetters(1024)
-	f.CharCount:Hide()
-	return f
-	-- or use http://wowprogramming.com/docs/widgets/ScrollingMessageFrame
-end
-
-local function CreateDebugFrame()
-	local f=CreateFrame("ScrollingMessageFrame", "DizzyDebugBox", UIParent, "InputScrollFrameTemplate")
-	f:SetSize(300,300)
-	--f.EditBox:SetFontObject("ChatFontNormal")
-	f:SetPoint("LEFT")
-	return f
-end
-
-local function ShowTheFrames()
+local function ShowEverything()
 	local frame = EnumerateFrames()
 	while frame do
 		if frame:IsVisible() and MouseIsOver(frame) then
@@ -39,16 +41,25 @@ local function ShowTheFrames()
 	
 
 	if GameTooltip:IsVisible() then		
-		local name, link = GameTooltip:GetItem()			
-		DEFAULT_CHAT_FRAME:AddMessage("GameTooltip " .. name .. " - " .. link)
-		GameTooltip:AddLine("Hello there")
-		GameTooltip:Show()
-	end	
+		local name, link = GameTooltip:GetItem()
+		local iname, ilink,
+			quality, iLevel, reqLevel,
+			iclass, isubclass,
+			maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
 	
-	DEFAULT_CHAT_FRAME:AddMessage("showing")
-	DIZZY_DEBUG_FRAME:AddMessage("Hello swetie")
-	DIZZY_DEBUG_FRAME:Show()
-	DIZZY_DEBUG_FRAME:AddMessage("Hello swetie2")
+		local str = ""..iclass.." ("..tostring(isubclass)..") "..quality.." price "..vendorPrice
+		DEFAULT_CHAT_FRAME:AddMessage(str)
+		
+		local tl = _G[GameTooltip:GetName().."TextLeft"..2]; 
+		if (t1) then
+			DEFAULT_CHAT_FRAME:AddMessage("Found t2")
+		end
+		
+		tl = _G[GameTooltip:GetName().."TextLeft"..1]; 
+		if (t1) then
+			DEFAULT_CHAT_FRAME:AddMessage("Found t1")
+		end
+	end		
 end
 
 function Dizzy_Load()
@@ -74,38 +85,35 @@ function Dizzy_OnHide(this)
 end
 
 function Dizzy_AddInfo(this)
-	local _,link = this:GetItem();
-	local itemName = this:GetName()
+	local iname,ilink = this:GetItem();
+	local windowsName = this:GetName()
 
-	DIZZY_DEBUG_FRAME:AddMessage("Dizzy: "..itemName)
+	if (Dizzy.LastSeen and Dizzy.LastSeen.Link == ilink) then
+		--DEFAULT_CHAT_FRAME:AddMessage("Hook: "..iname)
+	else		
+		Dizzy.CacheItem(ilink)
+	end
 
-	if link then
-		local iname,_,irare,ilvl,imin,itype,isubtype,istack,iequloc,itex,isell = GetItemInfo(link);
-		local iid = Dizzy_GetID(link)
-		this:AddLine("Dizzy: "..iname);
-		this:Show();
+
+	if Dizzy.LastSeen then
+		local item = Dizzy.LastSeen
+		if item.IsItemOfInterest then
+			local str = ""..item.Class.." ("..tostring(item.SubClass)..")"
+			this:AddLine(str, "40", "c0", "40", true)
+			this:Show()
+		end
+	else
+		DEFAULT_CHAT_FRAME:AddMessage("Nothing in cache for : "..ilink)
 	end
 end
  
-
 SLASH_DIZZY1 = "/dizzy"
 SLASH_DIZZY2 = "/dz"
 local function SlashHandler(msg, editbox)
-	--print("Usage")
-	ShowTheFrames()
+	ShowEverything()
 end
 SlashCmdList["DIZZY"] = SlashHandler;
 
-DIZZY_DEBUG_FRAME = CreateDebugFrame()
-local kids = {DIZZY_DEBUG_FRAME:GetChildren()};	
-for _,v in pairs(kids) do
-	DEFAULT_CHAT_FRAME:AddMessage("Child frame ");
-	if (v) then
-		local cit_name = v:GetName();
-		if ( cit_name ) then    
-			DEFAULT_CHAT_FRAME:AddMessage("Child frame " .. cit_name .. " ");
-		end
-	end
-end 
+Dizzy_Load()
 
-printHello()
+DEFAULT_CHAT_FRAME:AddMessage("Dizzy is here...")
