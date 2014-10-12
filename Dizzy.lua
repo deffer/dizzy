@@ -1,4 +1,4 @@
-Dizzy = {}
+Dizzy = Dizzy or {}
 
 Dizzy.CacheItem = function(ilink)
 	local name, link,
