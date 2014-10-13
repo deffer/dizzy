@@ -37,6 +37,9 @@ Dizzy.UpdateFrame = function(item, frame)
 	--local str = ""..item.Class.." ("..tostring(item.SubClass)..")"
 	frame:AddLine(itemEpStr, r, g, b, true)
 	frame:Show()
+	
+	DIZZY_DEBUG_FRAME:AddMessage("Showing...")
+	DIZZY_DEBUG_FRAME:Show()
 end
 
 Dizzy.GetID = function(ilink)
@@ -69,6 +72,9 @@ local function Dizzy_ShowEverything()
 		str = str.." "..tostring(Dizzy.IsItemOfInterest(iclass, isubclass)).." "..tostring(Dizzy.IsQualityOfInterest(quality))
 
 		DEFAULT_CHAT_FRAME:AddMessage(str)
+		
+		width, height = DIZZY_DEBUG_FRAME:GetSize() 
+		DEFAULT_CHAT_FRAME:AddMessage("Debug: "..tostring(DIZZY_DEBUG_FRAME:GetFrameStrata()).." "..width.." "..height)
 		
 		local tl = _G[GameTooltip:GetName().."TextLeft"..2]; 
 		if (t1) then
@@ -130,5 +136,7 @@ end
 SlashCmdList["DIZZY"] = SlashHandler;
 
 Dizzy_Load()
+Dizzy_DebugFrame()
+
 
 DEFAULT_CHAT_FRAME:AddMessage("Dizzy is here...")

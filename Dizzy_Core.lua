@@ -144,15 +144,19 @@ local function CreateDebugFrameMultiline()
 end
 
 local function CreateDebugFrame()
-	local f=CreateFrame("ScrollingMessageFrame", "DizzyDebugBox", UIParent, "InputScrollFrameTemplate")
+	local f=CreateFrame("Frame", "DizzyDebugBox", UIParent, "ChatFrameTemplate")
 	f:SetSize(300,300)
+	--f:SetMinSize(20, 20)
 	--f.EditBox:SetFontObject("ChatFontNormal")
-	f:SetPoint("LEFT")
+	-- f:SetPoint("LEFT")
+	f:SetPoint("CENTER", UIParent, "CENTER")
+	f:SetBackdrop({bgFile = [[Interface\Buttons\WHITE8X8]]})
+	f:CreateTitleRegion()
 	return f
 end
 
 function Dizzy_DebugFrame()
-	local DIZZY_DEBUG_FRAME = CreateDebugFrame()
+	DIZZY_DEBUG_FRAME = CreateDebugFrame()	
 	local kids = {DIZZY_DEBUG_FRAME:GetChildren()};	
 	for _,v in ipairs(kids) do
 		DEFAULT_CHAT_FRAME:AddMessage("Child frame ");
