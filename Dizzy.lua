@@ -37,9 +37,10 @@ Dizzy.UpdateFrame = function(item, frame)
 	--local str = ""..item.Class.." ("..tostring(item.SubClass)..")"
 	frame:AddLine(itemEpStr, r, g, b, true)
 	frame:Show()
-	
-	DIZZY_DEBUG_FRAME:AddMessage("Showing...")
-	DIZZY_DEBUG_FRAME:Show()
+	if (DIZZY_DEBUG_FRAME) then
+		DIZZY_DEBUG_FRAME:AddMessage("Showing...")
+		DIZZY_DEBUG_FRAME:Show()
+	end
 end
 
 Dizzy.GetID = function(ilink)
@@ -56,6 +57,13 @@ local function Dizzy_ShowEverything()
 		frame = EnumerateFrames(frame)
 	end
 	
+	if (DIZZY_DEBUG_FRAME) then
+		if DIZZY_DEBUG_FRAME:IsVisible() then
+			DIZZY_DEBUG_FRAME:Hide()
+		else
+			DIZZY_DEBUG_FRAME:Show()
+		end
+	end
 
 	if GameTooltip:IsVisible() then		
 		local name, link = GameTooltip:GetItem()
@@ -73,8 +81,10 @@ local function Dizzy_ShowEverything()
 
 		DEFAULT_CHAT_FRAME:AddMessage(str)
 		
-		width, height = DIZZY_DEBUG_FRAME:GetSize() 
-		DEFAULT_CHAT_FRAME:AddMessage("Debug: "..tostring(DIZZY_DEBUG_FRAME:GetFrameStrata()).." "..width.." "..height)
+		if (DIZZY_DEBUG_FRAME) then
+			width, height = DIZZY_DEBUG_FRAME:GetSize() 
+			DEFAULT_CHAT_FRAME:AddMessage("Debug: "..tostring(DIZZY_DEBUG_FRAME:GetFrameStrata()).." "..width.." "..height.."  "..tostring(DIZZY_DEBUG_FRAME:IsVisible()))
+		end
 		
 		local tl = _G[GameTooltip:GetName().."TextLeft"..2]; 
 		if (t1) then
@@ -127,6 +137,7 @@ function Dizzy_AddInfo(this)
 		DEFAULT_CHAT_FRAME:AddMessage("Nothing in cache for : "..ilink)
 	end
 end
+
  
 SLASH_DIZZY1 = "/dizzy"
 SLASH_DIZZY2 = "/dz"
@@ -136,7 +147,8 @@ end
 SlashCmdList["DIZZY"] = SlashHandler;
 
 Dizzy_Load()
-Dizzy_DebugFrame()
 
+DIZZY_DEBUG_FRAME = Dizzy.CreateDebugFrame()	
+DIZZY_DEBUG_FRAME:Show() -- doesnt work. probably need to hook up to on player enter
 
 DEFAULT_CHAT_FRAME:AddMessage("Dizzy is here...")

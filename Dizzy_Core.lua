@@ -27,7 +27,7 @@ Dizzy.Ranges = {
 	{name = "Green Armor",  ranges={ {f=5, t=65}, {f=79,t=120}, {f=130,t=200}, {f=272,t=333}, {f=364,t=445}}},
 	{name = "Green Weapon", ranges={ {f=6, t=65}, {f=80,t=120}, {f=130,t=200}, {f=272,t=318}, {f=364,t=445}}},
 	{name = "Blue Armor",   ranges={ {f=1, t=65}, {f=66,t=115}, {f=130,t=200}, {f=288,t=377}, {f=410,t=463}}},
-	{name = "Epic Armor",   ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=535}, {f=536,t=665}}}
+	{name = "Epic Armor",   ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=580}, {f=581,t=665}}}
 }
 
 
@@ -130,42 +130,5 @@ end
 
 -- Dizzy_dump(_G,"")
 
-DIZZY_DEBUG_FRAME = nil;
-local function CreateDebugFrameMultiline()
-	local f=CreateFrame("ScrollFrame", "DizzyDebugBox", UIParent, "InputScrollFrameTemplate")
-	f:SetSize(300,300)
-	-- f:SetPoint("CENTER")
-	f:SetPoint("LEFT")
-	f.EditBox:SetFontObject("ChatFontNormal")
-	f.EditBox:SetMaxLetters(1024)
-	f.CharCount:Hide()
-	return f
-	-- or use http://wowprogramming.com/docs/widgets/ScrollingMessageFrame
-end
 
-local function CreateDebugFrame()
-	local f=CreateFrame("Frame", "DizzyDebugBox", UIParent, "ChatFrameTemplate")
-	f:SetSize(300,300)
-	--f:SetMinSize(20, 20)
-	--f.EditBox:SetFontObject("ChatFontNormal")
-	-- f:SetPoint("LEFT")
-	f:SetPoint("CENTER", UIParent, "CENTER")
-	f:SetBackdrop({bgFile = [[Interface\Buttons\WHITE8X8]]})
-	f:CreateTitleRegion()
-	return f
-end
-
-function Dizzy_DebugFrame()
-	DIZZY_DEBUG_FRAME = CreateDebugFrame()	
-	local kids = {DIZZY_DEBUG_FRAME:GetChildren()};	
-	for _,v in ipairs(kids) do
-		DEFAULT_CHAT_FRAME:AddMessage("Child frame ");
-		if (v) then
-			local cit_name = v:GetName();
-			if ( cit_name ) then    
-				DEFAULT_CHAT_FRAME:AddMessage("Child frame " .. cit_name .. " ");
-			end
-		end
-	end 
-end
  
