@@ -65,7 +65,7 @@ local function createScrollbarFor(frame)
 	return scrollBar
 end
 
-Dizzy.CreateDebugFrame = function()
+local createDebugFrame = function()
 	local f = createWrapperFrame("DizzyDebugFrame")
 	tinsert(UISpecialFrames, "DizzyDebugFrame")
 	f.closeButton = createCloseButtonFor(f)
@@ -99,5 +99,77 @@ Dizzy.CreateDebugFrame = function()
 		end
 	end)
 
+	f:RegisterEvent("PLAYER_LOGIN")
+	f:SetScript("OnEvent", function(self, event, ...)
+		if event == "PLAYER_LOGIN" then
+			self:Show()
+		end
+	end)
+
 	return f
+end
+
+Dizzy.CreateDebugFrame = function()
+	Dizzy.DebugFrame = createDebugFrame()
+end
+
+Dizzy.Debug = function(text)
+	if (Dizzy.DebugFrame) then
+		Dizzy.DebugFrame.messageFrame:AddMessage(text)
+	else
+		DEFAULT_CHAT_FRAME:AddMessage(text)
+	end
+end
+
+Dizzy.DebugShowFrames = function()
+	local f = EnumerateFrames()
+
+	local frame = DEFAULT_CHAT_FRAME
+	local verbose = false
+	if (Dizzy.DebugFrame) then
+		frame = Dizzy.DebugFrame.messageFrame
+		verbose = true
+
+		-- also display info about debug frame
+		local width, height = Dizzy.DebugFrame:GetSize()
+		local layout = ""..Dizzy.DebugFrame:GetFrameStrata().." "..width.."x"..height
+		local visibility = "hidden"
+		if Dizzy.DebugFrame:IsVisible() then visibility = "visible" end
+		DEFAULT_CHAT_FRAME:AddMessage("Debug frame is "..visibility.." ("..layout..")")
+	end
+
+	while f do
+		if frame:IsVisible() and (verbose or MouseIsOver(f)) then
+			frame:AddMessage(f:GetName() .. " - " .. f:GetID())
+		end
+		f = EnumerateFrames(frame)
+	end
+end
+
+Dizzy.DebugShowGlobal = function (pattern)
+	if string.find(pattern, "^[^%w_]+$") then
+		local obj = _G[pattern]
+		if obj then Dizzy.DebugShowObject(obj) else Dizzy.Debug("Object "..pattern.." not found in globals") end
+	else
+		-- its a pattern. scan all _G for anything that matches. don't show more that 200
+		local count = 0;
+		Dizzy.Debug("Patterns are not supported yet")
+	end
+end
+
+Dizzy.DebugShowObject = function(t)
+	local frame = DEFAULT_CHAT_FRAME
+	if (Dizzy.DebugFrame) then
+		frame = Dizzy.DebugFrame.messageFrame
+	end
+
+	local s={}
+	local n=0
+	for k in pairs(t) do
+		n=n+1 s[n]=k
+	end
+	table.sort(s)
+	for k,v in ipairs(s) do
+		frame:AddMessage(""..v.." "..(type(v)=="table" and "{}" or tostring(v)))
+	end
 end

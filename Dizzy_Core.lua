@@ -6,7 +6,7 @@ Dizzy.Expansions = {
 	{name = "Wrath of the Lich King", short="WotLK", from=71, to=80, code=2},
 	{name = "Cataclysm", short="cata", from=81, to=85, code=3},
 	{name = "Mists of Pandaria", short="MoP", from=86, to=90, code=4 },
-	{name = "Future", short="Next",from=91, to=100, code=5 }
+	{name = "Down of something", short="DoH",from=91, to=100, code=5 }
 }
 
 -- not used. Just a reminder
@@ -27,14 +27,42 @@ Dizzy.Ranges = {
 	{name = "Green Armor",  ranges={ {f=5, t=65}, {f=79,t=120}, {f=130,t=200}, {f=272,t=333}, {f=364,t=445}}},
 	{name = "Green Weapon", ranges={ {f=6, t=65}, {f=80,t=120}, {f=130,t=200}, {f=272,t=318}, {f=364,t=445}}},
 	{name = "Blue Armor",   ranges={ {f=1, t=65}, {f=66,t=115}, {f=130,t=200}, {f=288,t=377}, {f=410,t=463}}},
-	{name = "Epic Armor",   ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=580}, {f=581,t=665}}}
+	{name = "Epic Armor",   ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=580}, {f=581,t=700}}}
 }
 
+Dizzy.TillerMessages = {}
+Dizzy.TillerMessages[79264] = "Haohan or Tina Mudclaw would love this"
+Dizzy.TillerMessages[79265] = "Old Hillpaw or Chee Chee would love this"
+Dizzy.TillerMessages[79266] = "Fish Fellreed or Ella would love this"
+Dizzy.TillerMessages[79267] = "Jogu or Sho would love this"
+Dizzy.TillerMessages[79268] = "Farmer Fung or Gina Mudclaw would love this"
 
-Dizzy.IsQualityOfInterest = function(iQuality)
-	return iQuality >1 and iQuality <5 -- 2, 3, or 4
+
+Dizzy.GetExpansionShortName = function(index)
+	if not index then return "???" end
+
+	local result = Dizzy.Expansions[index]
+	if not result then return "???" end
+
+	result = result.short
+	return result or "???"
 end
 
+Dizzy.IsDizzy = function(iclass, isubclass, iquality)
+	-- todo there will be some exceptions, like world even bosses drop, PvP equip, etc
+	return (iclass == "Weapon" or iclass == "Armor") and isubclass ~= "Fishing Poles"
+		and iquality >1 and iquality <5 -- 2, 3, or 4
+end
+
+Dizzy.IsTillerItem = function(item)
+	local id = 0; -- TODO
+
+	-- March lily, Lovely apple, etc...
+	if (id >= 79264 and id <= 79268) then return true end
+
+	-- TODO food
+	return false
+end
 
 --[[
  intValue is value we are looking for in the ranges array
@@ -71,10 +99,6 @@ end
 
 -- returns Expansion Pack of given item level (WARNING starts from 1. subtract 1 to get wow-type) and certainty
 Dizzy.GetEpOfItemLevel = function(iLevel, iQuality, iClass)
-	if not Dizzy.IsQualityOfInterest(iQuality) then
-		return nil
-	end
-
 	local rangeIndex = 0 -- index in the Dizzy.Ranges array
 	if (iQuality == 2) then
 		if (iClass == "Weapon") then rangeIndex = 2 elseif (iClass == "Armor") then rangeIndex = 1 end
@@ -106,13 +130,10 @@ end
 
 --print("" ..Dizzy.GetID("Coop|Hitem:123:456"))
 
--- globals.lua
--- show all global variables
 
 Dizzy.seen={}
-
 Dizzy.DumpGlobals = function(t,i)
-	seen[t]=true
+	Dizzy.seen[t]=true
 	local s={}
 	local n=0
 	for k in pairs(t) do
@@ -122,13 +143,13 @@ Dizzy.DumpGlobals = function(t,i)
 	for k,v in ipairs(s) do
 		print(i,v)
 		v=t[v]
-		if type(v)=="table" and not seen[v] then
+		if type(v)=="table" and not Dizzy.seen[v] then
 			Dizzy.DumpGlobals(v,i.."\t")
 		end
 	end
 end
 
--- Dizzy_dump(_G,"")
+-- Dizzy.DumpGlobals(_G,"")
 
 
  
