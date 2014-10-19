@@ -42,6 +42,18 @@ local function createCloseButtonFor(frame)
 	return closeButton
 end
 
+local function createReloadButtonFor(frame)
+	local closeButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+	closeButton:SetPoint("BOTTOMLEFT", frame, 10, 10)
+	closeButton:SetHeight(25)
+	closeButton:SetWidth(90)
+	closeButton:SetText("Reload UI")
+	closeButton:SetScript("OnClick", function(self)
+		ReloadUI()
+	end)
+	return closeButton
+end
+
 local function createScrollingFrameFor(frame)
 	local messageFrame = CreateFrame("ScrollingMessageFrame", nil, frame)
 	messageFrame:SetPoint("CENTER", 15, 20)
@@ -59,7 +71,7 @@ local function createScrollbarFor(frame)
 	local scrollBar = CreateFrame("Slider", nil, frame, "UIPanelScrollBarTemplate")
 	scrollBar:SetPoint("RIGHT", frame, "RIGHT", -10, 10)
 	scrollBar:SetSize(30, frame.height - 90)
-	scrollBar:SetMinMaxValues(0, 9)
+	scrollBar:SetMinMaxValues(0, 20)
 	scrollBar:SetValueStep(1)
 	scrollBar.scrollStep = 1
 	return scrollBar
@@ -69,6 +81,7 @@ local createDebugFrame = function()
 	local f = createWrapperFrame("DizzyDebugFrame")
 	tinsert(UISpecialFrames, "DizzyDebugFrame")
 	f.closeButton = createCloseButtonFor(f)
+	f.reloadButton = createReloadButtonFor(f)
 	f.messageFrame = createScrollingFrameFor(f)
 
 	--for i = 1, 25 do
@@ -99,9 +112,9 @@ local createDebugFrame = function()
 		end
 	end)
 
-	f:RegisterEvent("PLAYER_LOGIN")
+	f:RegisterEvent("PLAYER_ENTERING_WORLD")
 	f:SetScript("OnEvent", function(self, event, ...)
-		if event == "PLAYER_LOGIN" then
+		if event == "PLAYER_ENTERING_WORLD" then
 			self:Show()
 		end
 	end)
@@ -122,7 +135,7 @@ Dizzy.Debug = function(text)
 end
 
 Dizzy.DebugShowFrames = function()
-	local f = EnumerateFrames()
+	
 
 	local frame = DEFAULT_CHAT_FRAME
 	local verbose = false
@@ -138,22 +151,32 @@ Dizzy.DebugShowFrames = function()
 		DEFAULT_CHAT_FRAME:AddMessage("Debug frame is "..visibility.." ("..layout..")")
 	end
 
-	while f do
-		if frame:IsVisible() and (verbose or MouseIsOver(f)) then
-			frame:AddMessage(f:GetName() .. " - " .. f:GetID())
+	local n = 0
+	local f = EnumerateFrames()
+	while (f) do
+		if f:IsVisible() and (verbose or MouseIsOver(f)) then
+			if (f:GetName() or f:GetID() ~=0) then
+				frame:AddMessage(tostring(f:GetName()) .. " - " .. tostring(f:GetID()))
+			else
+				n = n+1
+			end
 		end
-		f = EnumerateFrames(frame)
+		f = EnumerateFrames(f)
+	end
+	
+	if n>0 then
+		frame:AddMessage("Also "..tostring(n) .. " unidentifiable frame(s)")
 	end
 end
 
 Dizzy.DebugShowGlobal = function (pattern)
-	if string.find(pattern, "^[^%w_]+$") then
+	if string.find(pattern, "^[%w_]+$") then
 		local obj = _G[pattern]
-		if obj then Dizzy.DebugShowObject(obj) else Dizzy.Debug("Object "..pattern.." not found in globals") end
+		if obj then  Dizzy.DebugShowObject(obj)  else Dizzy.Debug("Object "..pattern.." not found in globals") 	end	
 	else
 		-- its a pattern. scan all _G for anything that matches. don't show more that 200
 		local count = 0;
-		Dizzy.Debug("Patterns are not supported yet")
+		Dizzy.Debug("Patterns are not supported yet")	
 	end
 end
 
@@ -162,14 +185,8 @@ Dizzy.DebugShowObject = function(t)
 	if (Dizzy.DebugFrame) then
 		frame = Dizzy.DebugFrame.messageFrame
 	end
-
-	local s={}
-	local n=0
+		
 	for k in pairs(t) do
-		n=n+1 s[n]=k
-	end
-	table.sort(s)
-	for k,v in ipairs(s) do
-		frame:AddMessage(""..v.." "..(type(v)=="table" and "{}" or tostring(v)))
+		frame:AddMessage(""..type(k).." "..(type(k)=="table" and "{}" or tostring(k)))		
 	end
 end

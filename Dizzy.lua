@@ -8,15 +8,23 @@ Dizzy.hide=function()
 	if Dizzy.DebugFrame and Dizzy.DebugFrame:IsVisible() then Dizzy.DebugFrame:Hide() end
 end
 
+Dizzy.GetID = function(ilink)
+	if not ilink then return 0 end
+	local _,_,iid = strfind(ilink,"|Hitem:(%d+):")
+	return tonumber(iid)
+end
+
 Dizzy.CacheItem = function(ilink)
 	local name, link,
 	iQuality, iLevel, reqLevel,
 	iclass, isubclass,
 	maxStack, equipSlot, texture, vendorPrice = GetItemInfo(ilink)
-	Dizzy.LastSeen = {Name = name, Link = link, 
+	local itemid = Dizzy.GetID(link)
+	Dizzy.LastSeen = {Name = name, Link = link, Id = itemid,
 		Class = iclass, SubClass = isubclass, 
 		Quality=iQuality, ItemLevel = iLevel, ReqLevel = reqLevel,
-		IsDizzy = Dizzy.IsDizzy(iclass, isubclass, iQuality)}
+		IsDizzy = Dizzy.IsDizzy(iclass, isubclass, iQuality),
+		OfTillersInterest = Dizzy.IsTillerItem(itemid)}
 end
 
 Dizzy.UpdateFrameEP = function(item, frame)
@@ -43,13 +51,26 @@ Dizzy.UpdateFrameEP = function(item, frame)
 	frame:Show()
 end
 
-Dizzy.GetID = function(ilink)
-	local _,_,iid = strfind(ilink,"|Hitem:(%d+):")
-	return tonumber(iid)
+Dizzy.UpdateFrameTillers = function(item, frame)
+	if not item then return end
+	
+	local info = Dizzy.TillerItems[item.Id]
+	if not info then
+		Dizzy.Debug("Couldnt find tiller message for item "..item.Name.." id ".. item.Id)
+		return
+	end
+	
+	frame:AddLine(tostring(info.message), 0, 0x70, 0xdd, true)	
 end
 
 Dizzy.DebugShowItem = function()
 	if GameTooltip:IsVisible() then		
+		local uname, ulink, some = GameTooltip:GetUnit()
+		if uname then
+			Dizzy.Debug("Unit "..uname.." "..tostring(ulink).." "..tostring(some))
+			return
+		end
+		
 		local name, link = GameTooltip:GetItem()
 		local iname, ilink,
 			quality, iLevel, reqLevel,
@@ -58,7 +79,8 @@ Dizzy.DebugShowItem = function()
 		local itemid = Dizzy.GetID(link)
 		Dizzy.Debug(ilink.." - "..itemid)
 		local dizFlag = Dizzy.IsDizzy(iclass, isubclass,quality) and "DE" or "non-DE"
-		local str = ""..iclass.." ("..tostring(isubclass)..") quality "..quality..", price "..vendorPrice..", "..dizFlag
+		local tillersFlag = Dizzy.IsTillerItem(itemid) and "Tillers" or "Not tiller"
+		local str = ""..iclass.." ("..tostring(isubclass)..") quality "..quality..", price "..vendorPrice..", "..dizFlag..", "..tillersFlag
 		Dizzy.Debug(str)
 
 		local userEP = Dizzy.GetEpOfUserLevel(reqLevel)
@@ -66,6 +88,12 @@ Dizzy.DebugShowItem = function()
 		str = "Item from expansion "..Dizzy.GetExpansionShortName(itemEP).."("..tostring(itemEP)..")"
 		str = str.." wearable in "..Dizzy.GetExpansionShortName(userEP).."("..tostring(userEP)..")"
 		Dizzy.Debug(str)
+		
+		if tillersFlag then
+			str = Dizzy.TillerItems[itemid]
+			if str then str = str.message end
+			Dizzy.Debug("Tiller message: "..tostring(str))
+		end
 	else
 	    Dizzy.Debug("GameTooltip frame is not visible")
 	end		
@@ -105,7 +133,7 @@ Dizzy.ScriptOnTooltipSetItem = function(frame)
 		local item = Dizzy.LastSeen
 		if item.IsDizzy then
 			Dizzy.UpdateFrameEP(item, frame)
-		elseif item.OfTillersInterest then
+		elseif item.OfTillersInterest then		
 			Dizzy.UpdateFrameTillers(item, frame)
 		end
 	else
@@ -125,11 +153,11 @@ local function SlashHandler(msg, editbox)
 	elseif command == "help" then
 		print("Syntax: /dz (frames|item|glob) to dump corresponding info into debug frame")
 		print("Syntax: /dz (show|hide) to show or hide debug frame")
-	elseif command == frames then
+	elseif command == "frames" then
 		Dizzy.DebugShowFrames()
-	elseif command == item then
+	elseif command == "item" then
 		Dizzy.DebugShowItem()
-	elseif command == glob then
+	elseif command == "glob" then
 		if (rest == "") then print("Syntax: /dz glob <pattern>") else Dizzy.DebugShowGlobal(rest) end
 	else
 		Dizzy.DebugShowItem()

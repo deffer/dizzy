@@ -30,12 +30,27 @@ Dizzy.Ranges = {
 	{name = "Epic Armor",   ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=580}, {f=581,t=700}}}
 }
 
-Dizzy.TillerMessages = {}
-Dizzy.TillerMessages[79264] = "Haohan or Tina Mudclaw would love this"
-Dizzy.TillerMessages[79265] = "Old Hillpaw or Chee Chee would love this"
-Dizzy.TillerMessages[79266] = "Fish Fellreed or Ella would love this"
-Dizzy.TillerMessages[79267] = "Jogu or Sho would love this"
-Dizzy.TillerMessages[79268] = "Farmer Fung or Gina Mudclaw would love this"
+Dizzy.TillerItems = {}
+-- Gifts
+Dizzy.TillerItems[79264] = {message = "Haohan or Tina Mudclaw would love this", members = {57402,58761}}
+Dizzy.TillerItems[79265] = {message = "Old Hillpaw or Chee Chee would love this", members = {58707,58709}}
+Dizzy.TillerItems[79266] = {message = "Fish Fellreed or Ella would love this", members = {58705,58647}}
+Dizzy.TillerItems[79267] = {message = "Jogu or Sho would love this", members = {58710,58708}}
+Dizzy.TillerItems[79268] = {message = "Farmer Fung or Gina Mudclaw would love this", members = {57298,58706}}
+-- Food
+Dizzy.TillerItems[74642] = {message = "Haohan Mudclaw loves this dish", members = {57402}}
+Dizzy.TillerItems[74643] = {message = "Jogu loves this dish", members = {58710}}
+Dizzy.TillerItems[74644] = {message = "Gina Mudclaw loves this dish", members = {58706}}
+Dizzy.TillerItems[74645] = {message = "Sho loves this dish", members = {58708}}
+Dizzy.TillerItems[74647] = {message = "Chee Chee loves this dish", members = {58709}}
+Dizzy.TillerItems[74649] = {message = "Old Hillpaw loves this dish", members = {58707}}
+Dizzy.TillerItems[74651] = {message = "Ella loves this dish", members = {58647}}
+Dizzy.TillerItems[74652] = {message = "Tina Mudclaw loves this dish", members = {58761}}
+Dizzy.TillerItems[74654] = {message = "Farmer Fung loves this dish", members = {57298}}
+Dizzy.TillerItems[74655] = {message = "Fish Fellreed loves this dish", members = {58705}}
+-- Old Hillpaw faction is 1276
+-- Fish 1282
+-- che che  1277
 
 
 Dizzy.GetExpansionShortName = function(index)
@@ -54,14 +69,11 @@ Dizzy.IsDizzy = function(iclass, isubclass, iquality)
 		and iquality >1 and iquality <5 -- 2, 3, or 4
 end
 
-Dizzy.IsTillerItem = function(item)
-	local id = 0; -- TODO
-
+Dizzy.IsTillerItem = function(id)
+	if not id then return false end
+	
 	-- March lily, Lovely apple, etc...
-	if (id >= 79264 and id <= 79268) then return true end
-
-	-- TODO food
-	return false
+	if Dizzy.TillerItems[id] then return true else return false end
 end
 
 --[[
