@@ -60,10 +60,49 @@ Dizzy.UpdateFrameTillers = function(item, frame)
 		return
 	end
 	
-	frame:AddLine(tostring(info.message), 0, 0x70, 0xdd, true)	
+	local members = info.members
+	local message = ""
+	if item.Id > 79000 then -- its gift
+		--[[ commenting out, since adding anything to grift tooltip frame throws an error
+		local r,g,b = 0xff, 0xff, 0x00
+		local npc1, npc2 = Dizzy.TillerMembers[members[1] ], Dizzy.TillerMembers[members[2] ]		
+		if (not npc1) or (not npc2) then Dizzy.Debug("Unknown tiller with ids "..members[1].." or "..members[2]); return end		
+		message = npc1.name.." or "..npc2.name.." would love this"
+		local _, rep1 = GetFriendshipReputation(npc1.fraction)
+		local _, rep2 = GetFriendshipReputation(npc2.fraction)
+		Dizzy.Debug("Got reps "..tostring(rep1).." and "..tostring(rep2))
+		if (not rep1) or (not rep2) or (rep1>=Dizzy.TillerRepExaltedAt and rep2>=Dizzy.TillerRepExaltedAt) then
+			r,g,b = 0.6, 0.6, 0.6
+		end				
+		frame.AddLine(message, r,g,b, true)
+		Dizzy.Debug("Gray")
+		if rep1 and rep1 >= Dizzy.TillerRepExaltedAt then
+			frame.AddLine("You are already best friends with "..npc1.name, r,g,b, true)
+		end
+		if rep2 and rep2 >= Dizzy.TillerRepExaltedAt then
+			frame.AddLine("You are already best friends with "..npc2.name, r,g,b, true)
+		end	
+		--]]
+	else                    -- it food		
+		local npc = Dizzy.TillerMembers[members[1]]
+		if not npc then return end
+		message = "Favorite dish of "..npc.name
+		local _, rep = GetFriendshipReputation(npc.fraction)
+		if (rep < Dizzy.TillerRepExaltedAt) then
+			frame:AddLine(message, 0, 0x70, 0xdd, true)	
+		else
+			frame:AddLine(message, 0.6, 0.6, 0.6, true)	
+			frame:AddLine("You are already best friends with "..npc.name, 0.6, 0.6, 0.6, true)	
+		end		
+	end	
+	
+	--frame:AddLine(tostring(info.message), 0, 0x70, 0xdd, true)	
 end
 
 Dizzy.DebugShowItem = function()
+	local a1, a2, a3 = GetFriendshipReputation(1273)
+	Dizzy.Debug("Rep: "..tostring(a1).." "..tostring(a2).." "..tostring(a3))
+
 	if GameTooltip:IsVisible() then		
 		local uname, ulink, some = GameTooltip:GetUnit()
 		if uname then

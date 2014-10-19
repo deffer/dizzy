@@ -6,7 +6,7 @@ local function createWrapperFrame(name)
 	frame.height = 250
 	frame:SetFrameStrata("FULLSCREEN_DIALOG")
 	frame:SetSize(frame.width, frame.height)
-	frame:SetPoint("LEFT", UIParent, "LEFT", 10, 50)
+	frame:SetPoint("LEFT", UIParent, "LEFT", 10, 150)
 	frame:SetBackdrop({
 		bgFile   = "Interface\\DialogFrame\\UI-DialogBox-Background",
 		edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",

@@ -48,9 +48,20 @@ Dizzy.TillerItems[74651] = {message = "Ella loves this dish", members = {58647}}
 Dizzy.TillerItems[74652] = {message = "Tina Mudclaw loves this dish", members = {58761}}
 Dizzy.TillerItems[74654] = {message = "Farmer Fung loves this dish", members = {57298}}
 Dizzy.TillerItems[74655] = {message = "Fish Fellreed loves this dish", members = {58705}}
--- Old Hillpaw faction is 1276
--- Fish 1282
--- che che  1277
+
+Dizzy.TillerMembers = {}
+Dizzy.TillerMembers[57298] = {name = "Farmer Fung", fraction=1283}
+Dizzy.TillerMembers[58707] = {name = "Old Hillpaw", fraction=1276}
+Dizzy.TillerMembers[58705] = {name = "Fish Fellreed", fraction=1282}
+Dizzy.TillerMembers[58709] = {name = "Chee Chee", fraction=1277}
+Dizzy.TillerMembers[57402] = {name = "Haohan Mudclaw", fraction=1279}
+Dizzy.TillerMembers[58761] = {name = "Tina Mudclaw", fraction=1280}
+Dizzy.TillerMembers[58706] = {name = "Gina Mudclaw", fraction=1281}
+Dizzy.TillerMembers[58708] = {name = "Sho", fraction=1278}
+Dizzy.TillerMembers[58647] = {name = "Ella", fraction=1275}
+Dizzy.TillerMembers[58710] = {name = "Jogu", fraction=1273}
+
+Dizzy.TillerRepExaltedAt = 42000
 
 
 Dizzy.GetExpansionShortName = function(index)
