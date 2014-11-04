@@ -1,0 +1,52 @@
+"\124cffffffff\124Hitem:10940:0:0:0:0:0:0:0:0:0:0\124h[Strange Dust]\124h\124r", -- Strange Dust
+"\124cffffffff\124Hitem:11083:0:0:0:0:0:0:0:0:0:0\124h[Soul Dust]\124h\124r", -- Soul Dust
+"\124cffffffff\124Hitem:11137:0:0:0:0:0:0:0:0:0:0\124h[Vision Dust]\124h\124r", -- Vision Dust
+"\124cffffffff\124Hitem:11176:0:0:0:0:0:0:0:0:0:0\124h[Dream Dust]\124h\124r", -- Dream Dust
+"\124cffffffff\124Hitem:16204:0:0:0:0:0:0:0:0:0:0\124h[Illusion Dust]\124h\124r", -- Illusion Dust
+"\124cffffffff\124Hitem:22445:0:0:0:0:0:0:0:0:0:0\124h[Arcane Dust]\124h\124r", -- Arcane Dust
+"\124cffffffff\124Hitem:34054:0:0:0:0:0:0:0:0:0:0\124h[Infinite Dust]\124h\124r", -- Infinite Dust
+"\124cffffffff\124Hitem:52555:0:0:0:0:0:0:0:0:0:0\124h[Hypnotic Dust]\124h\124r", -- Hypnotic Dust
+"\124cffffffff\124Hitem:74249:0:0:0:0:0:0:0:0:0:0\124h[Spirit Dust]\124h\124r", -- Spirit Dust
+"\124cffffffff\124Hitem:109693:0:0:0:0:0:0:0:0:0:0\124h[Draenic Dust]\124h\124r" -- Draenic Dust
+"\124cff1eff00\124Hitem:10938:0:0:0:0:0:0:0:0:0:0\124h[Lesser Magic Essence]\124h\124r", -- Lesser Magic Essence
+"\124cff1eff00\124Hitem:10939:0:0:0:0:0:0:0:0:0:0\124h[Greater Magic Essence]\124h\124r", -- Greater Magic Essence
+"\124cff1eff00\124Hitem:10998:0:0:0:0:0:0:0:0:0:0\124h[Lesser Astral Essence]\124h\124r", -- Lesser Astral Essence
+"\124cff1eff00\124Hitem:11082:0:0:0:0:0:0:0:0:0:0\124h[Greater Astral Essence]\124h\124r", -- Greater Astral Essence
+"\124cff1eff00\124Hitem:11134:0:0:0:0:0:0:0:0:0:0\124h[Lesser Mystic Essence]\124h\124r", -- Lesser Mystic Essence
+"\124cff1eff00\124Hitem:11135:0:0:0:0:0:0:0:0:0:0\124h[Greater Mystic Essence]\124h\124r", -- Greater Mystic Essence
+"\124cff1eff00\124Hitem:11174:0:0:0:0:0:0:0:0:0:0\124h[Lesser Nether Essence]\124h\124r", -- Lesser Nether Essence
+"\124cff1eff00\124Hitem:11175:0:0:0:0:0:0:0:0:0:0\124h[Greater Nether Essence]\124h\124r", -- Greater Nether Essence
+"\124cff1eff00\124Hitem:16202:0:0:0:0:0:0:0:0:0:0\124h[Lesser Eternal Essence]\124h\124r", -- Lesser Eternal Essence
+"\124cff1eff00\124Hitem:16203:0:0:0:0:0:0:0:0:0:0\124h[Greater Eternal Essence]\124h\124r", -- Greater Eternal Essence
+"\124cff1eff00\124Hitem:22447:0:0:0:0:0:0:0:0:0:0\124h[Lesser Planar Essence]\124h\124r", -- Lesser Planar Essence
+"\124cff1eff00\124Hitem:22446:0:0:0:0:0:0:0:0:0:0\124h[Greater Planar Essence]\124h\124r", -- Greater Planar Essence
+"\124cff1eff00\124Hitem:34056:0:0:0:0:0:0:0:0:0:0\124h[Lesser Cosmic Essence]\124h\124r", -- Lesser Cosmic Essence
+"\124cff1eff00\124Hitem:34055:0:0:0:0:0:0:0:0:0:0\124h[Greater Cosmic Essence]\124h\124r", -- Greater Cosmic Essence
+"\124cff1eff00\124Hitem:52718:0:0:0:0:0:0:0:0:0:0\124h[Lesser Celestial Essence]\124h\124r", -- Lesser Celestial Essence
+"\124cff1eff00\124Hitem:52719:0:0:0:0:0:0:0:0:0:0\124h[Greater Celestial Essence]\124h\124r", -- Greater Celestial Essence
+"\124cff1eff00\124Hitem:74250:0:0:0:0:0:0:0:0:0:0\124h[Mysterious Essence]\124h\124r" -- Mysterious Essence
+"\124cff0070dd\124Hitem:10978:0:0:0:0:0:0:0:0:0:0\124h[Small Glimmering Shard]\124h\124r", -- Small Glimmering Shard
+"\124cff0070dd\124Hitem:11084:0:0:0:0:0:0:0:0:0:0\124h[Large Glimmering Shard]\124h\124r", -- Large Glimmering Shard
+"\124cff0070dd\124Hitem:11138:0:0:0:0:0:0:0:0:0:0\124h[Small Glowing Shard]\124h\124r", -- Small Glowing Shard
+"\124cff0070dd\124Hitem:11139:0:0:0:0:0:0:0:0:0:0\124h[Large Glowing Shard]\124h\124r", -- Large Glowing Shard
+"\124cff0070dd\124Hitem:11177:0:0:0:0:0:0:0:0:0:0\124h[Small Radiant Shard]\124h\124r", -- Small Radiant Shard
+"\124cff0070dd\124Hitem:11178:0:0:0:0:0:0:0:0:0:0\124h[Large Radiant Shard]\124h\124r", -- Large Radiant Shard
+"\124cff0070dd\124Hitem:14343:0:0:0:0:0:0:0:0:0:0\124h[Small Brilliant Shard]\124h\124r", -- Small Brilliant Shard
+"\124cff0070dd\124Hitem:14344:0:0:0:0:0:0:0:0:0:0\124h[Large Brilliant Shard]\124h\124r", -- Large Brilliant Shard
+"\124cff0070dd\124Hitem:22448:0:0:0:0:0:0:0:0:0:0\124h[Small Prismatic Shard]\124h\124r", -- Small Prismatic Shard
+"\124cff0070dd\124Hitem:22449:0:0:0:0:0:0:0:0:0:0\124h[Large Prismatic Shard]\124h\124r", -- Large Prismatic Shard
+"\124cff0070dd\124Hitem:34053:0:0:0:0:0:0:0:0:0:0\124h[Small Dream Shard]\124h\124r", -- Small Dream Shard
+"\124cff0070dd\124Hitem:34052:0:0:0:0:0:0:0:0:0:0\124h[Dream Shard]\124h\124r", -- Dream Shard
+"\124cff0070dd\124Hitem:52720:0:0:0:0:0:0:0:0:0:0\124h[Small Heavenly Shard]\124h\124r", -- Small Heavenly Shard
+"\124cff0070dd\124Hitem:52721:0:0:0:0:0:0:0:0:0:0\124h[Heavenly Shard]\124h\124r", -- Heavenly Shard
+"\124cff0070dd\124Hitem:74252:0:0:0:0:0:0:0:0:0:0\124h[Small Ethereal Shard]\124h\124r", -- Small Ethereal Shard
+"\124cff0070dd\124Hitem:74247:0:0:0:0:0:0:0:0:0:0\124h[Ethereal Shard]\124h\124r", -- Ethereal Shard
+"\124cff0070dd\124Hitem:115502:0:0:0:0:0:0:0:0:0:0\124h[Small Luminous Shard]\124h\124r", -- Small Luminous Shard
+"\124cff0070dd\124Hitem:111245:0:0:0:0:0:0:0:0:0:0\124h[Luminous Shard]\124h\124r" -- Luminous Shard
+"\124cffa335ee\124Hitem:52722:0:0:0:0:0:0:0:0:0:0\124h[Maelstrom Crystal]\124h\124r", -- Maelstrom Crystal
+"\124cffa335ee\124Hitem:34057:0:0:0:0:0:0:0:0:0:0\124h[Abyss Crystal]\124h\124r", -- Abyss Crystal
+"\124cffa335ee\124Hitem:22450:0:0:0:0:0:0:0:0:0:0\124h[Void Crystal]\124h\124r", -- Void Crystal
+"\124cffa335ee\124Hitem:20725:0:0:0:0:0:0:0:0:0:0\124h[Nexus Crystal]\124h\124r", -- Nexus Crystal
+"\124cffa335ee\124Hitem:74248:0:0:0:0:0:0:0:0:0:0\124h[Sha Crystal]\124h\124r",	-- Sha Crystal
+"\124cffa335ee\124Hitem:115504:0:0:0:0:0:0:0:0:0:0\124h[Fractured Temporal Crystal]\124h\124r", -- Fractured Temporal Crystal
+"\124cffa335ee\124Hitem:113588:0:0:0:0:0:0:0:0:0:0\124h[Temporal Crystal]\124h\124r" -- Temporal Crystal
