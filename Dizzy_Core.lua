@@ -77,7 +77,7 @@ Dizzy.GetExpansionShortName = function(index)
 end
 
 Dizzy.IsDizzy = function(iclass, isubclass, iquality)
-	-- todo there will be some exceptions, like world even bosses drop, PvP equip, etc
+	-- todo there will be some exceptions, like world even bosses drop, PvP equip, Mist-Piercing Goggles, etc
 	return (iclass == "Weapon" or iclass == "Armor") and isubclass ~= "Fishing Poles"
 		and iquality >1 and iquality <5 -- 2, 3, or 4
 end

@@ -21,23 +21,23 @@ Dizzy.Materials = {
     -- essences [21..50]
     -- "\124cff1eff00\124Hitem:10938:0:0:0:0:0:0:0:0:0:0\124h[Lesser Magic Essence]\124h\124r", -- Lesser Magic Essence
     {10938,"Lesser Magic Essence"}, {10939,"Greater Magic Essence"}, {10998,"Lesser Astral Essence"},
-    {11082,"Greater Astral Essence"}, {11134,"Lesser Mystic Essence"}, {11135,"Greater Mystic Essence"},
-    {11174,"Lesser Nether Essence"}, {11175,"Greater Nether Essence"}, {16202,"Lesser Eternal Essence"},
-    {16203,"Greater Eternal Essence"}, {22447,"Lesser Planar Essence"},{22446,"Greater Planar Essence"},
-    {34056,"Lesser Cosmic Essence"},{34055,"Greater Cosmic Essence"}, {52718,"Lesser Celestial Essence"},
-    {52719,"Greater Celestial Essence"}, {74250,"Mysterious Essence"},
+    {11082,"Greater Astral Essence"}, {11134,"Lesser Mystic Essence"}, {11135,"Greater Mystic Essence"},--24,25,26
+    {11174,"Lesser Nether Essence"}, {11175,"Greater Nether Essence"}, {16202,"Lesser Eternal Essence"},--27,28,29
+    {16203,"Greater Eternal Essence"}, {22447,"Lesser Planar Essence"},{22446,"Greater Planar Essence"},--30,31,32
+    {34056,"Lesser Cosmic Essence"},{34055,"Greater Cosmic Essence"}, {52718,"Lesser Celestial Essence"},--33,34,35
+    {52719,"Greater Celestial Essence"}, {74250,"Mysterious Essence"},--36,37
     nil,nil,nil,  nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
     -- shards [51..80]
     -- "\124cff0070dd\124Hitem:10978:0:0:0:0:0:0:0:0:0:0\124h[Small Glimmering Shard]\124h\124r", -- Small Glimmering Shard
-    {10978,"Small Glimmering Shard"},{11084,"Large Glimmering Shard"},{11138,"Small Glowing Shard"},{11139,"Large Glowing Shard"},
-    {11177,"Small Radiant Shard"}, {11178,"Large Radiant Shard"}, {14343,"Small Brilliant Shard"}, {14344,"Large Brilliant Shard"},
-    {22448,"Small Prismatic Shard"},{22449,"Large Prismatic Shard"},{34053,"Small Dream Shard"}, {34052,"Dream Shard"},
-    {52720,"Small Heavenly Shard"},{52721,"Heavenly Shard"},{74252,"Small Ethereal Shard"},{74247,"Ethereal Shard"},
-    {115502,"Small Luminous Shard"},{111245,"Luminous Shard"},
+    {10978,"Small Glimmering Shard"},{11084,"Large Glimmering Shard"},{11138,"Small Glowing Shard"},{11139,"Large Glowing Shard"},--51,52,53,54
+    {11177,"Small Radiant Shard"}, {11178,"Large Radiant Shard"}, {14343,"Small Brilliant Shard"}, {14344,"Large Brilliant Shard"},--55,56,57,58
+    {22448,"Small Prismatic Shard"},{22449,"Large Prismatic Shard"},{34053,"Small Dream Shard"}, {34052,"Dream Shard"},--59,60,61,62
+    {52720,"Small Heavenly Shard"},{52721,"Heavenly Shard"},{74252,"Small Ethereal Shard"},{74247,"Ethereal Shard"},--63,64,65,66
+    {115502,"Small Luminous Shard"},{111245,"Luminous Shard"},--67,68
     nil,nil, nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
     --cystals [81..]
     -- "\124cffa335ee\124Hitem:52722:0:0:0:0:0:0:0:0:0:0\124h[Maelstrom Crystal]\124h\124r", -- Maelstrom Crystal
-    {52722,"Maelstrom Crystal"}, {34057,"Abyss Crystal"}, {22450,"Void Crystal"}, {20725,"Nexus Crystal"},
+    {20725,"Nexus Crystal"}, {22450,"Void Crystal"}, {34057,"Abyss Crystal"}, {52722,"Maelstrom Crystal"},
     {74248,"Sha Crystal"}, {115504,"Fractured Temporal Crystal"}, {113588,"Temporal Crystal"}
 }
 
@@ -84,29 +84,29 @@ Dizzy.Dis_Chances = {
     -- each pair is max iLevel and percent. sometimes there is 3d value, it is for secondary material
     {
         -- [1] Green Armor dusts: {333,75} => 75% of dust for iLevels [16..333]
-        {{15,80}, {333,75}},
+        {{15,80}, {333,75},   {700, 0}},
         -- [2] Green Armor essences
-        {{20, 20}, {25, 15}, {65, 20}, {200, 22}, {333, 25, 2}},
+        {{20, 20}, {25, 15}, {65, 20}, {200, 22}, {333, 25, 2},   {700,0}},
         -- [3] Green Armor shards: {3, 200} => 3% for iLevel [66..200]
-        {{0, 15}, {5, 20}, {10, 25}, {5, 65}, {3, 200}}
+        {{15,0}, {20,5}, {25,10}, {65,5}, {200,3},    {700,0}}
     },
     -- Weapon Green [1] - dusts, [2] - essences, [3] -shards
     {
-        {{20, 20}, {25, 15}, {50, 20}, {200, 22}, {318, 25}}, -- dust
-        {{15, 80}, {318, 75}}, -- essences
-        {{15, 0}, {20, 5}, {50, 5}, {200, 3}} -- shards. Ex: iLevels [51..22] - 3%
+        {{20, 20}, {25, 15}, {50, 20}, {200, 22}, {318, 25},    {700,0}}, -- dust
+        {{15, 80}, {318, 75},    {700,0}}, -- essences
+        {{15, 0}, {20, 5}, {50, 5}, {200, 3},    {700,0}} -- shards. Ex: iLevels [51..22] - 3%
     },
     -- Rare Armor [1] - shards, [2] - crystals
     {
-        {{55, 100}, {200, 99.5}, {377, 100}},
-        {{55, 0}, {200, 0.5}}
+        {{55, 100}, {200, 99.5}, {377, 100},    {700,0}},
+        {{55, 0}, {200, 0.5},    {700,0}}
     },
     -- Rare Weapon - almost same as armor, see below
     {},
     -- Epic Armor [1] - shards, [2] - crystals
     {
-        {{39, 0}, {55, 100}},
-        {{55, 0}, {100, 100}, {164, 22, 67}, {397, 100} } -- [101..164] 22% for main crystal, 67% for secondary crystal
+        {{39, 0}, {55, 100},    {700,0}},
+        {{55, 0}, {100, 100}, {164, 22, 67}, {397, 100},    {700,0} } -- [101..164] 22% for main crystal, 67% for secondary crystal
         -- TODO 61-80 	[Nexus Crystal] 	1-2x 	76-80 Weapons: 33% 1x, 67% 2x
     },
     -- Epic Weapon - almost same as armor, see below
@@ -120,28 +120,32 @@ Dizzy.Dis_Mats = {
     -- Armor Green [1] - dusts, [2] - essences, [3] -shards
     {
         -- [1] Green Armor dusts: {333,8} => itemLevel 333 and below breaks into material 8
-        {{25, 1}, {35,2}, {45,3}, {55,4}, {65,5}, {120,6}, {200, 7}, {333, 8}, {437,9}, {509, 0}, {700, 10}},
+        {{25, 1}, {35,2}, {45,3}, {55,4}, {65,5}, {120,6}, {200, 7}, {333, 8},    {437,9}, {509, 0}, {700, 10}},
         -- [2] Green Armor essences
-        {{15,20}, {20,21}, {25,22}, {30,23}, {35,24}, {40,25}, {45,26}, {50,27}, {55,28}, {65,29},
-            {99,30}, {120,31}, {151,32}, {200,33}, {300,34}, {333, 35, 34}, {}, {}},
+        {{15,21}, {20,22}, {25,23}, {30,24}, {35,25}, {40,26}, {45,27}, {50,28}, {55,29}, {65,30},
+            {99,31}, {120,32}, {151,33}, {200,34}, {300,35}, {333, 36, 35},   {437, 37}, {509,0}, {700, 0}},
         -- [3] Green Armor shards
-        {{15, 0}, {25}, {30}, {35}, {40}, {45}, {50}, {55}, {65}, {99}, {120},{151},{200}, {0,333}}
+        {{15, 0}, {25,51}, {30,52}, {35, 53}, {40, 54}, {45,55}, {50,56}, {55,57}, {65,58}, {99,59},
+            {120,60},{151,61},{200,62},   {333, 0}, {700, 0}}
     },
     -- Weapon Green [1] - dusts, [2] - essences, [3] -shards (almost same as armors)
     {
-        {{1, 25}, {2, 35}, {3, 45}, {4, 55}, {5, 65}, {6, 120}, {7, 200}, {8, 318}},
-        {{15}, {20}, {25}, {30}, {35}, {40}, {45}, {50}, {55}, {65}, {99}, {120}, {151}, {200}, {300}, {15, 318}},
-        {{0, 15}, {25}, {30}, {35}, {40}, {45}, {50}, {55}, {65}, {99}, {120},{151},{200}, {0,318}}
+        {{25, 1}, {35,2}, {45,3}, {55,4}, {65,5}, {120,6}, {200, 7}, {318, 8},    {437,9}, {509, 0}, {700, 10}},
+        {{15,21}, {20,22}, {25,23}, {30,24}, {35,25}, {40,26}, {45,27}, {50,28}, {55,29}, {65,30},
+            {99,31}, {120,32}, {151,33}, {200,34}, {300,35}, {318, 36},     {437, 37}, {509,0}, {700, 0}},
+        {{15, 0}, {25,51}, {30,52}, {35, 53}, {40, 54}, {45,55}, {50,56}, {55,57}, {65,58}, {99,59},
+            {120,60},{151,61},{200,62},     {333, 0}, {700, 0}}
     },
     -- Rare [1] - shards, [2] - crystals
     {
-        {{25}, {30}, {35}, {40}, {45}, {50}, {55}, {65}, {99}, {115}, {164}, {200}, {316}, {377}},
-        {{55, 0}, {65}, {99}, {115}, {164}, {200}, {377,0}}
+        {{25, 51}, {30,52}, {35,53}, {40,54}, {45,55}, {50, 56}, {55,57}, {65,58}, {99,59}, {115,60}, {164,61},
+            {200,62}, {316,63}, {377,64},    {700,0}},
+        {{55, 0}, {99, 81}, {115, 82}, {164, 83}, {200, 83}, {377,0},    {700,0}}
     },{},
     -- Epic
     {
-        {{39,0}, {45}, {50}, {55}, {0, 397}},
-        {{55,0}, {37, 80, 37}, {38, 164, 38}, {264}, {397}}
+        {{39,0}, {45, 55}, {50, 56}, {55, 57}, {0, 397},  {700,0}},
+        {{55,0}, {80, 81}, {164, 82}, {264,83}, {397,84},  {700,0}}
     },{}
 }
 Dizzy.Dis_Mats[4] = copy1(Dizzy.Dis_Mats[3])
@@ -152,53 +156,66 @@ Dizzy.Dis_Counts = {
     -- Armor Green [1] - dusts, [2] - essences, [3] -shards
     {
         -- [1] Green Armor dusts: {333,8} => itemLevel 333 and below breaks into material 8
-        {},
+        {{700,1}},
         -- [2] Green Armor essences
-        {},
+        {{700,1}},
         -- [3] Green Armor shards
-        {}
+        {{700,1}}
     },
     -- Weapon Green [1] - dusts, [2] - essences, [3] -shards (almost same as armors)
     {
-        {},
-        {},
-        {}
+        {{700,1}},
+        {{700,1}},
+        {{700,1}}
     },
     -- Rare [1] - shards, [2] - crystals
     {
-        {},
-        {}
+        {{700,1}},
+        {{700,1}}
     },{},
     -- Epic
     {
-        {},
-        {}
+        {{700,1}},
+        {{700,1}}
     },{}
 }
 Dizzy.Dis_Counts[4] = copy1(Dizzy.Dis_Counts[3])
 Dizzy.Dis_Counts[6] = copy1(Dizzy.Dis_Counts[5])
 
 Dizzy.GetItemDisLines = function(iLevel, iQuality, iClass)
+    local result = {}
+    local iLines=1
     local tidx = Dizzy.GetItemTableIndex(iQuality, iClass)
-    if not tidx or tidx == 0 then return {} end
+    if not tidx or tidx == 0 or tidx>6 then return {"Error "..tostring(tidx)} end
 
     -- these three arrays should have the same length: 3 (dusts, essences, shards) or 2 (shards and crystals)
-    local changesArray = Dizzy.Dis_Chances[tidx];
+    local chancesArray = Dizzy.Dis_Chances[tidx];
     local matsArray = Dizzy.Dis_Mats[tidx];
-    local countsArray = Dizzy.Dis_Mats[tidx];
+    local countsArray = Dizzy.Dis_Counts[tidx];
 
-    local chances = Dizzy.FindNearestRange(iLevel, changesArray)
-    local mats = Dizzy.FindNearestRange(iLevel, matsArray)
-    local counts = Dizzy.FindNearestRange(iLevel, countsArray)
 
-    for i,chanceOfMat in ipairs(chances) do
-        local chanceValue = chanceOfMat[2]
-        local chanceOfSecondaryMat = chanceOfMat[3]
+    for i,chanceOfMatArray in ipairs(chancesArray) do
+        -- dust, or essence, or shard, or crystal
+        local chanceInfo = Dizzy.FindNearestRange(iLevel, chanceOfMatArray)
+        if not chanceInfo then return {"Error chances table not found"} end
+        local matInfo = Dizzy.FindNearestRange(iLevel, matsArray[i])
+        local countInfo = Dizzy.FindNearestRange(iLevel, countsArray[i])
 
-        local currentMat = mats[i][2];
-        local secondaryMat = mats[i][3];
+        local chanceValue = chanceInfo[2]
+        local chanceOfSecondaryMat = chanceInfo[3]
 
-        local countValue = counts[i][2];
-        local secondaryMatCount = counts[i][3];
+        local currentMat = matInfo[2];
+        local secondaryMat = matInfo[3];
+
+        --local countValue = countInfo[2];
+        --local secondaryMatCount = countInfo[3];
+
+        if chanceValue and currentMat then --and countValue then
+            result[iLines] = ""..Dizzy.GenerateMaterialHref(currentMat).." "..tostring(chanceValue).."%  ";
+        else
+            result[iLines] = "Fail: mat="..tostring(currentMat).." chance="..tostring(chanceValue)
+        end
+        iLines = iLines+1
     end
+    return result
 end

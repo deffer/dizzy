@@ -99,24 +99,35 @@ Dizzy.UpdateFrameTillers = function(item, frame)
 	--frame:AddLine(tostring(info.message), 0, 0x70, 0xdd, true)	
 end
 
-Dizzy.DebugShowItem = function()
-	local a1, a2, a3 = GetFriendshipReputation(1273)
-	Dizzy.Debug("Rep: "..tostring(a1).." "..tostring(a2).." "..tostring(a3))
+Dizzy.DebugShowItem = function(item)
+	--local a1, a2, a3 = GetFriendshipReputation(1273)
+	-- Dizzy.Debug("Reputation: "..tostring(a1).." "..tostring(a2).." "..tostring(a3))
 
-	if GameTooltip:IsVisible() then		
-		local uname, ulink, some = GameTooltip:GetUnit()
-		if uname then
-			Dizzy.Debug("Unit "..uname.." "..tostring(ulink).." "..tostring(some))
-			return
-		end
-		
-		local name, link = GameTooltip:GetItem()
+    local link
+    if item then
+        link = item.Link
+    else
+        local name, uname, ulink, some
+        if GameTooltip:IsVisible() then
+            Dizzy.Debug(" --------- GameTooltip frame ----------- ")
+            uname, ulink, some = GameTooltip:GetUnit()
+            name, link = GameTooltip:GetItem()
+        elseif ItemRefTooltip:IsVisible() then
+            Dizzy.Debug(" --------- ItemRefTooltip frame ----------- ")
+            uname, ulink, some = ItemRefTooltip:GetUnit()
+            name, link = ItemRefTooltip:GetItem()
+        end
+        Dizzy.Debug("    Unit "..tostring(uname).." "..tostring(ulink).." "..tostring(some).."   >Item "..tostring(name).." "..tostring(link))
+    end
+
+	if link then
+        if item then Dizzy.Debug("-") end
 		local iname, ilink,
 			quality, iLevel, reqLevel,
 			iclass, isubclass,
 			maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
 		local itemid = Dizzy.GetID(link)
-		Dizzy.Debug(ilink.." - "..itemid)
+		Dizzy.Debug(ilink.." - "..itemid.."  ilevel "..tostring(iLevel))
 		local dizFlag = Dizzy.IsDizzy(iclass, isubclass,quality) and "DE" or "non-DE"
 		local tillersFlag = Dizzy.IsTillerItem(itemid) and "Tillers" or "Not tiller"
 		local str = ""..iclass.." ("..tostring(isubclass)..") quality "..quality..", price "..vendorPrice..", "..dizFlag..", "..tillersFlag
@@ -128,13 +139,25 @@ Dizzy.DebugShowItem = function()
 		str = str.." wearable in "..Dizzy.GetExpansionShortName(userEP).."("..tostring(userEP)..")"
 		Dizzy.Debug(str)
 		
-		if tillersFlag then
+		if tillersFlag=="Tillers" then
 			str = Dizzy.TillerItems[itemid]
 			if str then str = str.message end
 			Dizzy.Debug("Tiller message: "..tostring(str))
-		end
+        end
+
+        if dizFlag == "DE" then
+            Dizzy.Debug("Calling GetItemDisLines "..tostring(Dizzy.GetItemDisLines));
+
+            local messages = Dizzy.GetItemDisLines(iLevel, quality, iclass)
+            Dizzy.Debug("Got result "..tostring(messages).." type "..type(messages));
+
+            for i, message in ipairs(messages) do
+                Dizzy.Debug(message)
+            end
+        end
+
 	else
-	    Dizzy.Debug("GameTooltip frame is not visible")
+	    Dizzy.Debug(">>>>>>>>>>>> No item information available")
 	end		
 end
 
@@ -164,8 +187,10 @@ Dizzy.ScriptOnTooltipSetItem = function(frame)
 	local iname,ilink = frame:GetItem();
 	local windowsName = frame:GetName()
 
+    local forDebug = false;
 	if ((not Dizzy.LastSeen) or not (Dizzy.LastSeen.Link == ilink)) then
 		Dizzy.CacheItem(ilink)
+        forDebug = true
 	end
 
 	if Dizzy.LastSeen then
@@ -178,7 +203,11 @@ Dizzy.ScriptOnTooltipSetItem = function(frame)
 	else
 		Dizzy.Debug("Nothing in cache for : "..ilink)
 		DEFAULT_CHAT_FRAME:AddMessage("Nothing in cache for : "..ilink) -- TODO remove
-	end
+    end
+
+    if forDebug and Dizzy.LastSeen then
+        Dizzy.DebugShowItem(Dizzy.LastSeen)
+    end
 end
 
  
