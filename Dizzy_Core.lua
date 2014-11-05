@@ -6,7 +6,7 @@ Dizzy.Expansions = {
 	{name = "Wrath of the Lich King", short="WotLK", from=71, to=80, code=2},
 	{name = "Cataclysm", short="cata", from=81, to=85, code=3},
 	{name = "Mists of Pandaria", short="MoP", from=86, to=90, code=4 },
-	{name = "Down of something", short="DoH",from=91, to=100, code=5 }
+	{name = "Warlords of Draenor", short="WoD",from=91, to=100, code=5 }
 }
 
 -- not used. Just a reminder
@@ -23,11 +23,13 @@ Dizzy.Qualities = {
 
 Dizzy.Ranges = {
 	--  f = from, t = to. actually, f is not important and is here only as a reminder
-	--                                 vanilla       BC            WotLK          Cata           Panda 
-	{name = "Green Armor",  ranges={ {f=5, t=65}, {f=79,t=120}, {f=130,t=200}, {f=272,t=333}, {f=364,t=445}}},
-	{name = "Green Weapon", ranges={ {f=6, t=65}, {f=80,t=120}, {f=130,t=200}, {f=272,t=318}, {f=364,t=445}}},
-	{name = "Blue Armor",   ranges={ {f=1, t=65}, {f=66,t=115}, {f=130,t=200}, {f=288,t=377}, {f=410,t=463}}},
-	{name = "Epic Armor",   ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=580}, {f=581,t=700}}}
+	--                                 vanilla       BC            WotLK          Cata           Panda         wod
+	{name = "Green Armor",  ranges={ {f=5, t=65}, {f=79,t=120}, {f=130,t=200}, {f=272,t=333}, {f=364,t=445}, {f=509,t=700}}},
+	{name = "Green Weapon", ranges={ {f=6, t=65}, {f=80,t=120}, {f=130,t=200}, {f=272,t=318}, {f=364,t=445}, {f=509,t=700}}},
+	{name = "Blue Armor",   ranges={ {f=1, t=65}, {f=66,t=115}, {f=130,t=200}, {f=288,t=377}, {f=410,t=463}, {f=509,t=700}}},
+	{name = "Blue Weapon",  ranges={ {f=1, t=65}, {f=66,t=115}, {f=130,t=200}, {f=288,t=377}, {f=410,t=463}, {f=509,t=700}}},
+	{name = "Epic Armor",   ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=580}, {f=509,t=700}}},
+	{name = "Epic weapon",  ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=580}, {f=509,t=700}}}
 }
 
 Dizzy.TillerItems = {}
@@ -83,7 +85,7 @@ end
 Dizzy.IsTillerItem = function(id)
 	if not id then return false end
 	
-	-- March lily, Lovely apple, etc...
+	-- March lily, Lovely apple, food they love, etc...
 	if Dizzy.TillerItems[id] then return true else return false end
 end
 
@@ -122,12 +124,8 @@ end
 
 -- returns Expansion Pack of given item level (WARNING starts from 1. subtract 1 to get wow-type) and certainty
 Dizzy.GetEpOfItemLevel = function(iLevel, iQuality, iClass)
-	local rangeIndex = 0 -- index in the Dizzy.Ranges array
-	if (iQuality == 2) then
-		if (iClass == "Weapon") then rangeIndex = 2 elseif (iClass == "Armor") then rangeIndex = 1 end
-	else
-		rangeIndex = iQuality -- 3-blue, 4-epic
-	end
+    -- index in the Dizzy.Ranges array
+    local rangeIndex = Dizzy.GetItemTableIndex(iQuality, iClass)
 
 	if rangeIndex == 0 then
 		return nil
