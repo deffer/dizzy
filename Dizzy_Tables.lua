@@ -42,9 +42,11 @@ Dizzy.Materials = {
 }
 
 Dizzy.GenerateMaterialHref = function(index)
+    if index == 0 then return "[Error material] 0" end
+
     local mat = Dizzy.Materials[index];
     local colorObject = Dizzy.FindNearestRange(index, Dizzy.MaterialColors);
-    if not mat or not colorObject then return "" end;
+    if not mat or not colorObject then return "Unknown material "..tostring(index) end;
 
     local id = tostring(mat[1])
     local name = tostring(mat[2])
@@ -84,7 +86,7 @@ Dizzy.Dis_Chances = {
     -- each pair is max iLevel and percent. sometimes there is 3d value, it is for secondary material
     {
         -- [1] Green Armor dusts: {333,75} => 75% of dust for iLevels [16..333]
-        {{15,80}, {333,75},   {700, 0}},
+        {{15,80}, {333,75},    {429, 85}, {700, 0}},
         -- [2] Green Armor essences
         {{20, 20}, {25, 15}, {65, 20}, {200, 22}, {333, 25, 2},   {700,0}},
         -- [3] Green Armor shards: {3, 200} => 3% for iLevel [66..200]
@@ -92,7 +94,7 @@ Dizzy.Dis_Chances = {
     },
     -- Weapon Green [1] - dusts, [2] - essences, [3] -shards
     {
-        {{20, 20}, {25, 15}, {50, 20}, {200, 22}, {318, 25},    {700,0}}, -- dust
+        {{20, 20}, {25, 15}, {50, 20}, {200, 22}, {318, 25},   {429, 85}, {700,0}}, -- dust
         {{15, 80}, {318, 75},    {700,0}}, -- essences
         {{15, 0}, {20, 5}, {50, 5}, {200, 3},    {700,0}} -- shards. Ex: iLevels [51..22] - 3%
     },
@@ -144,7 +146,7 @@ Dizzy.Dis_Mats = {
     },{},
     -- Epic
     {
-        {{39,0}, {45, 55}, {50, 56}, {55, 57}, {0, 397},  {700,0}},
+        {{39,0}, {45, 55}, {50, 56}, {55, 57}, {397, 0},  {700,0}},
         {{55,0}, {80, 81}, {164, 82}, {264,83}, {397,84},  {700,0}}
     },{}
 }
@@ -156,7 +158,7 @@ Dizzy.Dis_Counts = {
     -- Armor Green [1] - dusts, [2] - essences, [3] -shards
     {
         -- [1] Green Armor dusts: {333,8} => itemLevel 333 and below breaks into material 8
-        {{700,1}},
+        {{333, "1-7?"},{429, "1-9"},{700,1}},
         -- [2] Green Armor essences
         {{700,1}},
         -- [3] Green Armor shards
@@ -192,30 +194,78 @@ Dizzy.GetItemDisLines = function(iLevel, iQuality, iClass)
     local chancesArray = Dizzy.Dis_Chances[tidx];
     local matsArray = Dizzy.Dis_Mats[tidx];
     local countsArray = Dizzy.Dis_Counts[tidx];
-
+    if not chancesArray or not matsArray or not countsArray then return {"Tables not found"} end
 
     for i,chanceOfMatArray in ipairs(chancesArray) do
-        -- dust, or essence, or shard, or crystal
+        -- chanceOfMatArray is dust, or essence, or shard, or crystal. {{},{},{}...}
         local chanceInfo = Dizzy.FindNearestRange(iLevel, chanceOfMatArray)
-        if not chanceInfo then return {"Error chances table not found"} end
         local matInfo = Dizzy.FindNearestRange(iLevel, matsArray[i])
         local countInfo = Dizzy.FindNearestRange(iLevel, countsArray[i])
+        if not chanceInfo or not matInfo or not countInfo then return {"Range not found"} end
 
-        local chanceValue = chanceInfo[2]
-        local chanceOfSecondaryMat = chanceInfo[3]
+        local lines = Dizzy.GenerateDisMatLine(chanceInfo, matInfo, countInfo, true)
+        if not lines then return {"No info available"} end
 
-        local currentMat = matInfo[2];
-        local secondaryMat = matInfo[3];
-
-        --local countValue = countInfo[2];
-        --local secondaryMatCount = countInfo[3];
-
-        if chanceValue and currentMat then --and countValue then
-            result[iLines] = ""..Dizzy.GenerateMaterialHref(currentMat).." "..tostring(chanceValue).."%  ";
-        else
-            result[iLines] = "Fail: mat="..tostring(currentMat).." chance="..tostring(chanceValue)
+        if lines[1] then
+            result[iLines] = lines[1]
+            iLines = iLines+1
         end
-        iLines = iLines+1
+
+        if lines[2] then
+            result[iLines] = lines[2]
+            iLines = iLines+1
+        end
     end
     return result
+end
+
+-- each info is pair or triple like {300, 15} or {300,15,14},
+--  300 is top level, 15 is actual value (percent or material or amount)
+--  14 is secondary value - sometimes items disenchants on two difference essences (or same mat but different
+--    chance/amount) ex: (2-3) lesser essence 75%, (1-2) greater essence 25%
+-- RETURNS normally an array (1 or 2 values) of string
+--   empty array means no DE for given material (0 chance or 0 amount)
+--   nil means error
+--   in debug mode return error string
+Dizzy.GenerateDisMatLine = function(chanceInfo, matInfo, countInfo, forDebug)
+    local result = {}
+    local chanceValue = chanceInfo[2]
+    local currentMat = matInfo[2];
+    local amountValue = countInfo[2];
+
+    local chanceOfSecondaryMat = chanceInfo[3]
+    local secondaryMat = matInfo[3];
+    local secondaryMatCount = countInfo[3];
+
+    if chanceValue and currentMat and amountValue then
+        if Dizzy.AnyZero({chanceValue, currentMat, amountValue}) then
+            if forDebug then
+                return {"Skip "..Dizzy.GenerateMaterialHref(currentMat).." "..tostring(chanceValue).."%  "..tostring(amountValue)}
+            else
+                return {}
+            end
+        else
+            local str = ""..Dizzy.GenerateMaterialHref(currentMat).." "..tostring(chanceValue).."%"
+            if amountValue ~= 1 and amountValue ~= "1" then
+                str = str .. " ("..tostring(amountValue)..")"
+            end
+            result[1] = str
+        end
+    else
+        if forDebug then
+            return {"Fail: mat="..tostring(currentMat).." chance="..tostring(chanceValue).." amount="..tostring()}
+        else
+            return nil
+        end
+    end
+
+    -- TODO secondary into result[2]
+    return result
+end
+
+Dizzy.AnyZero = function(input)
+    for i,v in ipairs(input) do
+        if not v or v == 0 then return true end
+    end
+    return false
 end
