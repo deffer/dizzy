@@ -48,6 +48,15 @@ Dizzy.UpdateFrameEP = function(item, frame)
 	itemEpStr = itemEpStr.." "..tostring(itemEP).." > "..tostring(userEP).." ("..item.ItemLevel..","..item.Quality..","..item.Class..")"
 
 	frame:AddLine(itemEpStr, r, g, b, true)
+
+    if IsControlKeyDown() then
+        local messages = Dizzy.GetItemDisLines(item.ItemLevel, item.Quality, item.Class)
+        if (messages) then
+            for i, message in ipairs(messages) do
+                frame:AddLine(message, 0.9, 0.9, 0.9, true)
+            end
+        end
+    end
 	frame:Show()
 end
 
