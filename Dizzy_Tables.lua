@@ -158,17 +158,21 @@ Dizzy.Dis_Counts = {
     -- Armor Green [1] - dusts, [2] - essences, [3] -shards
     {
         -- [1] Green Armor dusts: {333,8} => itemLevel 333 and below breaks into material 8
-        {{333, "1-7?"},{429, "1-9"},{700,1}},
+        {{15, "1-2"}, {20, "2-3"}, {25, "4-6"},{30, "1-2"}, {35,"2-5"}, {40, "1-2"}, {45, "2-5"}, {50, "1-2"},
+            {55, "2-5"}, {60, "1-2"}, {65, "2-5"}, {79, "1-3"}, {99, "2-3"}, {120, "2-5"}, {150, "1-3"}, {200, "2-7"},
+            {300, "1-9"}, {333, "1-10"},   {429, "1-9"},{700,1}},
         -- [2] Green Armor essences
-        {{700,1}},
+        {   {60, "1-2"}, {65, "2-3"}, {79, "1-3"}, {99, "2-3"}, {200, "1-2"}, {300, "1-8"}, {333, "1-4", "1-3"},   {700,1}},
         -- [3] Green Armor shards
-        {{700,1}}
+        {{15,0}, {200,1}, {333, 0},   {700, 1}}
     },
     -- Weapon Green [1] - dusts, [2] - essences, [3] -shards (almost same as armors)
     {
-        {{700,1}},
-        {{700,1}},
-        {{700,1}}
+        {{15, "1-2"}, {20, "2-3"}, {25, "4-6"},{30, "1-2"}, {35,"2-5"}, {40, "1-2"}, {45, "2-5"}, {50, "1-2"},
+            {55, "2-5"}, {60, "1-2"}, {65, "2-5"}, {99, "2-3"}, {120, "2-5"}, {151, "1-3"}, {200, "4-7"},
+            {300, "1-7"}, {317, "1-10"}, {318, "?"},   {429, "1-9"},{700,1}},
+        {{60, "1-2"},  {99, "2-3"}, {99, "2-3"}, {200, "1-2"}, {300, "1-8"}, {317, "1-5"},{318, "?"},   {700,1}},
+        {{15,0}, {200,1}, {700,1}}
     },
     -- Rare [1] - shards, [2] - crystals
     {
@@ -226,7 +230,7 @@ end
 -- RETURNS normally an array (1 or 2 values) of string
 --   empty array means no DE for given material (0 chance or 0 amount)
 --   nil means error
---   in debug mode return error string
+--   in debug mode return error/debug strings (never nil)
 Dizzy.GenerateDisMatLine = function(chanceInfo, matInfo, countInfo, forDebug)
     local result = {}
     local chanceValue = chanceInfo[2]
