@@ -45,16 +45,18 @@ Dizzy.UpdateFrameEP = function(item, frame)
 	if (not sure) then
 		itemEpStr = itemEpStr.."(?)"
 	end
-	itemEpStr = itemEpStr.." "..tostring(itemEP).." > "..tostring(userEP).." ("..item.ItemLevel..","..item.Quality..","..item.Class..")"
+	--itemEpStr = itemEpStr.." "..tostring(itemEP).." > "..tostring(userEP).." ("..item.ItemLevel..","..item.Quality..","..item.Class..")"
 
 	frame:AddLine(itemEpStr, r, g, b, true)
 
     if IsControlKeyDown() then
-        local messages = Dizzy.GetItemDisLines(item.ItemLevel, item.Quality, item.Class)
+        local messages = Dizzy.GetItemDisLines(item.ItemLevel, item.Quality, item.Class, false)
         if (messages) then
             for i, message in ipairs(messages) do
                 frame:AddLine(message, 0.9, 0.9, 0.9, true)
             end
+        else
+            frame:AddLine("Dizzy fail :(", 0.9, 0.9, 0.9, true)
         end
     end
 	frame:Show()
@@ -112,6 +114,8 @@ Dizzy.DebugShowItem = function(item)
 	--local a1, a2, a3 = GetFriendshipReputation(1273)
 	-- Dizzy.Debug("Reputation: "..tostring(a1).." "..tostring(a2).." "..tostring(a3))
 
+    if not Dizzy.DebugFrame or not Dizzy.DebugFrame:IsVisible() then return end
+
     local link
     if item then
         link = item.Link
@@ -155,10 +159,10 @@ Dizzy.DebugShowItem = function(item)
         end
 
         if dizFlag == "DE" then
-            Dizzy.Debug("Calling GetItemDisLines "..tostring(Dizzy.GetItemDisLines));
+            --Dizzy.Debug("Calling GetItemDisLines "..tostring(Dizzy.GetItemDisLines));
 
-            local messages = Dizzy.GetItemDisLines(iLevel, quality, iclass)
-            Dizzy.Debug("Got result "..tostring(messages).." type "..type(messages));
+            local messages = Dizzy.GetItemDisLines(iLevel, quality, iclass, true)
+            --Dizzy.Debug("Got result "..tostring(messages).." type "..type(messages));
 
             for i, message in ipairs(messages) do
                 Dizzy.Debug(message)

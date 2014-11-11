@@ -199,7 +199,7 @@ Dizzy.Dis_Counts = {
 Dizzy.Dis_Counts[4] = copy1(Dizzy.Dis_Counts[3])
 --Dizzy.Dis_Counts[6] = copy1(Dizzy.Dis_Counts[5])
 
-Dizzy.GetItemDisLines = function(iLevel, iQuality, iClass)
+Dizzy.GetItemDisLines = function(iLevel, iQuality, iClass, forDebug)
     local result = {}
     local iLines=1
     local tidx = Dizzy.GetItemTableIndex(iQuality, iClass)
@@ -218,7 +218,7 @@ Dizzy.GetItemDisLines = function(iLevel, iQuality, iClass)
         local countInfo = Dizzy.FindNearestRange(iLevel, countsArray[i])
         if not chanceInfo or not matInfo or not countInfo then return {"Range not found"} end
 
-        local lines = Dizzy.GenerateDisMatLine(chanceInfo, matInfo, countInfo, true)
+        local lines = Dizzy.GenerateDisMatLine(chanceInfo, matInfo, countInfo, forDebug)
         if not lines then return {"No info available"} end
 
         if lines[1] then
