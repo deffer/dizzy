@@ -1,12 +1,13 @@
 Dizzy=Dizzy or {}
 
 Dizzy.Expansions = {
-	{name = "Vanilla", short="vanilla", from=0, to=60, code=0}, -- index 1 in the array
+	{name = "Vanilla", short="Vanilla", from=0, to=60, code=0}, -- index 1 in the array
 	{name = "The Burning Crusade", short="BC", from=61, to=70, code=1},
 	{name = "Wrath of the Lich King", short="WotLK", from=71, to=80, code=2},
-	{name = "Cataclysm", short="cata", from=81, to=85, code=3},
+	{name = "Cataclysm", short="Cata", from=81, to=85, code=3},
 	{name = "Mists of Pandaria", short="MoP", from=86, to=90, code=4 },
-	{name = "Warlords of Draenor", short="WoD",from=91, to=100, code=5 }
+	{name = "Warlords of Draenor", short="WoD",from=91, to=100, code=5 },
+    {name = "Unknown", short="Unknown",from=101, to=9000, code=6 },
 }
 
 -- not used. Just a reminder
@@ -80,6 +81,18 @@ Dizzy.IsDizzy = function(iclass, isubclass, iquality)
 	-- todo there will be some exceptions, like world even bosses drop, PvP equip, Mist-Piercing Goggles, etc
 	return (iclass == "Weapon" or iclass == "Armor") and isubclass ~= "Fishing Poles"
 		and iquality >1 and iquality <5 -- 2, 3, or 4
+end
+
+Dizzy.IsDizzy1 = function(arguments)
+-- todo there will be some exceptions, like world even bosses drop, PvP equip, Mist-Piercing Goggles, etc
+    local iname, ilink,
+    quality, iLevel, reqLevel,
+    iclass, isubclass,
+    maxStack, equipSlot, texture, vendorPrice = unpack(arguments)
+
+    return (iclass == "Weapon" or iclass == "Armor") and isubclass ~= "Fishing Poles"
+            and maxStack==1 and vendorPrice > 10 -- todo is it string??
+            and iquality >1 and iquality <5 -- 2, 3, or 4
 end
 
 Dizzy.IsTillerItem = function(id)

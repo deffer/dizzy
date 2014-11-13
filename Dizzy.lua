@@ -24,7 +24,9 @@ Dizzy.CacheItem = function(ilink)
 		Class = iclass, SubClass = isubclass, 
 		Quality=iQuality, ItemLevel = iLevel, ReqLevel = reqLevel,
 		IsDizzy = Dizzy.IsDizzy(iclass, isubclass, iQuality),
-		OfTillersInterest = Dizzy.IsTillerItem(itemid)}
+		OfTillersInterest = Dizzy.IsTillerItem(itemid),
+        DisplayLines = nil -- to indicate no info yet
+    }
 end
 
 Dizzy.UpdateFrameEP = function(item, frame)
@@ -135,16 +137,19 @@ Dizzy.DebugShowItem = function(item)
 
 	if link then
         if item then Dizzy.Debug("-") end
+        local itemInfo = {GetItemInfo(link)}
 		local iname, ilink,
 			quality, iLevel, reqLevel,
 			iclass, isubclass,
-			maxStack, equipSlot, texture, vendorPrice = GetItemInfo(link)
+			maxStack, equipSlot, texture, vendorPrice = unpack(itemInfo)
 		local itemid = Dizzy.GetID(link)
 		Dizzy.Debug(ilink.." - "..itemid.."  ilevel "..tostring(iLevel))
-		local dizFlag = Dizzy.IsDizzy(iclass, isubclass,quality) and "DE" or "non-DE"
+		local dizFlag = Dizzy.IsDizzy1(iclass, isubclass,quality) and "DE" or "non-DE"
 		local tillersFlag = Dizzy.IsTillerItem(itemid) and "Tillers" or "Not tiller"
 		local str = ""..iclass.." ("..tostring(isubclass)..") quality "..quality..", price "..vendorPrice..", "..dizFlag..", "..tillersFlag
 		Dizzy.Debug(str)
+        str = "Equip: "..tostring(equipSlot)..", stacked to "..tostring(maxStack)
+        Dizzy.Debug(str)
 
 		local userEP = Dizzy.GetEpOfUserLevel(reqLevel)
 		local itemEP, sure = Dizzy.GetEpOfItemLevel(iLevel, quality, iclass)
