@@ -35,12 +35,12 @@ Dizzy.UpdateFrameEP = function(item, frame)
 	local itemEP, sure = Dizzy.GetEpOfItemLevel(item.ItemLevel, item.Quality, item.Class)
 	local r,g,b = 0,0,0
 	if (not userEP) then
-		r,g,b = 0x40, 0x40, 0x40
+		r,g,b = 0.2, 0.2, 0.2
 	else
-		if itemEP <= userEP then
-			r,g,b = 0x40, 0xc0, 0x40
+		if itemEP <= userEP or (userEP==1 and itemEP>2) then
+			r,g,b = 1, 1, 1
 		else
-			r,g,b = 0xff, 0xff, 0x00
+			r,g,b = 0.9, 0.9, 0
 		end
 	end
 	local itemEpStr = Dizzy.GetExpansionShortName(itemEP)
@@ -52,7 +52,7 @@ Dizzy.UpdateFrameEP = function(item, frame)
 	frame:AddLine(itemEpStr, r, g, b, true)
 
     if IsControlKeyDown() then
-        local messages = Dizzy.GetItemDisLines(item.ItemLevel, item.Quality, item.Class, false)
+        local messages = Dizzy.GetItemDisLines(item.ItemLevel, item.Quality, item.Class, item.Name, false)
         if (messages) then
             for i, message in ipairs(messages) do
                 frame:AddLine(message, 0.9, 0.9, 0.9, true)
@@ -143,8 +143,8 @@ Dizzy.DebugShowItem = function(item)
 			iclass, isubclass,
 			maxStack, equipSlot, texture, vendorPrice = unpack(itemInfo)
 		local itemid = Dizzy.GetID(link)
-		Dizzy.Debug(ilink.." - "..itemid.."  ilevel "..tostring(iLevel))
-		local dizFlag = Dizzy.IsDizzy1(iclass, isubclass,quality) and "DE" or "non-DE"
+		Dizzy.Debug(ilink.." - "..itemid.."  ilevel "..tostring(iLevel).."  req "..reqLevel)
+		local dizFlag = Dizzy.IsDizzy1(itemInfo) and "DE" or "non-DE"
 		local tillersFlag = Dizzy.IsTillerItem(itemid) and "Tillers" or "Not tiller"
 		local str = ""..iclass.." ("..tostring(isubclass)..") quality "..quality..", price "..vendorPrice..", "..dizFlag..", "..tillersFlag
 		Dizzy.Debug(str)
@@ -166,7 +166,7 @@ Dizzy.DebugShowItem = function(item)
         if dizFlag == "DE" then
             --Dizzy.Debug("Calling GetItemDisLines "..tostring(Dizzy.GetItemDisLines));
 
-            local messages = Dizzy.GetItemDisLines(iLevel, quality, iclass, true)
+            local messages = Dizzy.GetItemDisLines(iLevel, quality, iclass, iname, true)
             --Dizzy.Debug("Got result "..tostring(messages).." type "..type(messages));
 
             for i, message in ipairs(messages) do
@@ -177,6 +177,10 @@ Dizzy.DebugShowItem = function(item)
 	else
 	    Dizzy.Debug(">>>>>>>>>>>> No item information available")
 	end		
+end
+
+Dizzy.ChangeSettings = function(key)
+    DIZZY_SavedSettings["key"] = key
 end
 
 Dizzy.HookOntoTooltipFrame = function()
@@ -245,7 +249,9 @@ local function SlashHandler(msg, editbox)
 		Dizzy.DebugShowItem()
 	elseif command == "glob" then
 		if (rest == "") then print("Syntax: /dz glob <pattern>") else Dizzy.DebugShowGlobal(rest) end
-	else
+    elseif command == "use" then
+        if (rest == "") then print("Syntax: /dz use alt|ctrl|shift|none|always") else Dizzy.ChangeSettings(rest) end
+    else
 		Dizzy.DebugShowItem()
 	end
 end
@@ -253,5 +259,8 @@ SlashCmdList["DIZZY"] = SlashHandler;
 
 Dizzy.HookOntoTooltipFrame()
 Dizzy.CreateDebugFrame()
+
+if(type(DIZZY_SavedSettings) ~= "table") then DIZZY_SavedSettings = {} end
+
 
 DEFAULT_CHAT_FRAME:AddMessage("Dizzy is here...")

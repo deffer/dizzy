@@ -37,8 +37,8 @@ Dizzy.Materials = {
     nil,nil, nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
     --cystals [81..]
     -- "\124cffa335ee\124Hitem:52722:0:0:0:0:0:0:0:0:0:0\124h[Maelstrom Crystal]\124h\124r", -- Maelstrom Crystal
-    {20725,"Nexus Crystal"}, {22450,"Void Crystal"}, {34057,"Abyss Crystal"}, {52722,"Maelstrom Crystal"},
-    {74248,"Sha Crystal"}, {115504,"Fractured Temporal Crystal"}, {113588,"Temporal Crystal"}
+    {20725,"Nexus Crystal"}, {22450,"Void Crystal"}, {34057,"Abyss Crystal"}, {52722,"Maelstrom Crystal"}, --81-84
+    {74248,"Sha Crystal"}, {115504,"Fractured Temporal Crystal"}, {113588,"Temporal Crystal"} -- 85-87
 }
 
 Dizzy.GenerateMaterialHref = function(index)
@@ -100,12 +100,14 @@ Dizzy.Dis_Chances = {
     },
     -- Rare Armor [1] - shards, [2] - crystals
     {
-        {{55, 100}, {164, 99.5}, {377, 100},    {700,0}},
+        {{55, 100}, {164, 99.5}, {316, 96,4}, {377, 95,5}, {450, 89,11},
+            {630, "~30-80", "~20-70"},     {700,0}},
         {{55, 0}, {164, 0.5}, {377,0},   {700,0}}
     },
     -- Rare Weapon - almost same as armor
     {
-        {{55, 100}, {200, 99.5}, {377, 100},    {700,0}},
+        {{55, 100}, {200, 99.5}, {316, 96,4}, {377, 95,5}, {420, 89,11}, {463, 89,11},
+            {630, "~30-80", "~20-70"},    {700,0}},
         {{55, 0}, {200, 0.5}, {377, 0},    {700,0}}
     },
     -- Epic Armor [1] - shards, [2] - crystals
@@ -145,11 +147,13 @@ Dizzy.Dis_Mats = {
     -- Rare [1] - shards, [2] - crystals
     {
         {{25, 51}, {30,52}, {35,53}, {40,54}, {45,55}, {50, 56}, {55,57}, {65,58}, {99,59}, {115,60}, {164,61},
-            {200,62}, {316,63}, {377,64},    {700,0}},
+            {200,62}, {316,63, 63}, {377,64,64}, {420, 65,65}, {463, 66,66},
+            {630, 67, 68}, {700,0}},
         {{55, 0}, {99, 81}, {115, 82}, {200, 83}, {377,0},    {700,0}}
     },{
         {{25, 51}, {30,52}, {35,53}, {40,54}, {45,55}, {50, 56}, {55,57}, {65,58}, {99,59}, {115,60}, {164,61},
-            {200,62}, {316,63}, {377,64},    {700,0}},
+            {200,62}, {316,63,63}, {377,64,64}, {420, 65,65},{463, 66,66},
+            {630, 67, 68},    {700,0}},
         {{55, 0}, {99, 81}, {115, 82}, {164, 83}, {200, 83}, {377,0},    {700,0}}
     },
     -- Epic
@@ -184,7 +188,7 @@ Dizzy.Dis_Counts = {
     },
     -- Rare [1] - shards, [2] - crystals
     {
-        {{200,1}, {316, "1-2"}, {377, "1-4?"}, {700,1}},
+        {{200,1}, {316, 1,2}, {377, 1, 2}, {420, 1,2}, {463,1,2}, {630, "1-8?", "1-2?"},  {700,1}},
         {{55,0}, {200,1}, {377, 0},{700,1}}
     },{},
     -- Epic
@@ -199,7 +203,11 @@ Dizzy.Dis_Counts = {
 Dizzy.Dis_Counts[4] = copy1(Dizzy.Dis_Counts[3])
 --Dizzy.Dis_Counts[6] = copy1(Dizzy.Dis_Counts[5])
 
-Dizzy.GetItemDisLines = function(iLevel, iQuality, iClass, forDebug)
+Dizzy.GetItemDisLines = function(iLevel, iQuality, iClass, itemName, forDebug)
+    if iLevel == 450 and string.find(itemName, "Contender's") then
+        return {Dizzy.GenerateDisMatLine({450, 85, 15},{450, 65, 65}, {450,1,2}, forDebug)}
+    end
+
     local result = {}
     local iLines=1
     local tidx = Dizzy.GetItemTableIndex(iQuality, iClass)

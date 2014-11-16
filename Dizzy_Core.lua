@@ -78,7 +78,7 @@ Dizzy.GetExpansionShortName = function(index)
 end
 
 Dizzy.IsDizzy = function(iclass, isubclass, iquality)
-	-- todo there will be some exceptions, like world even bosses drop, PvP equip, Mist-Piercing Goggles, etc
+	-- todo there will be some exceptions, like world even bosses drop, PvP equip, Mist-Piercing Goggles, Terracota Fragment, etc
 	return (iclass == "Weapon" or iclass == "Armor") and isubclass ~= "Fishing Poles"
 		and iquality >1 and iquality <5 -- 2, 3, or 4
 end
@@ -92,7 +92,7 @@ Dizzy.IsDizzy1 = function(arguments)
 
     return (iclass == "Weapon" or iclass == "Armor") and isubclass ~= "Fishing Poles"
             and maxStack==1 and vendorPrice > 10 -- todo is it string??
-            and iquality >1 and iquality <5 -- 2, 3, or 4
+            and quality >1 and quality <5 -- 2, 3, or 4
 end
 
 Dizzy.IsTillerItem = function(id)
