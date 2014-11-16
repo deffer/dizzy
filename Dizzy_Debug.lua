@@ -93,7 +93,13 @@ local createDebugFrame = function()
 
 	f.scrollBar = createScrollbarFor(f)
 	f.scrollBar:SetScript("OnValueChanged", function(self, value)
-		f.messageFrame:SetScrollOffset(select(2, f.scrollBar:GetMinMaxValues()) - value)
+        local maxValue = select(2, f.scrollBar:GetMinMaxValues());
+        local perScroll = f.messageFrame:GetNumMessages() / maxValue;
+        if perScroll < 1 then
+		    f.messageFrame:SetScrollOffset(maxValue - value)
+        else
+            f.messageFrame:SetScrollOffset(f.messageFrame:GetNumMessages() - value*perScroll)
+        end
 	end)
 	f.scrollBar:SetValue(select(2, f.scrollBar:GetMinMaxValues()))
 
