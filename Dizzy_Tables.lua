@@ -263,7 +263,7 @@ Dizzy.GenerateDisMatLine = function(chanceInfo, matInfo, countInfo, forDebug)
             result[1] = str
 
             -- secondary material/chance
-            if Dizzy.AnyNonEmpty({ chance2, mat2, amount2 }, 3) then
+            if Dizzy.AnyNonZero({ chance2, mat2, amount2 }, 3) then
                 chance2, mat2, amount2 = Dizzy.MergeArrays({ chance1, mat1, amount1 }, { chance2, mat2, amount2 })
                 local str = ""..Dizzy.GenerateMaterialHref(mat2).." "..tostring(chance2).."%"
                 if amount2 ~= 1 and amount2 ~= "1" then
