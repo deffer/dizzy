@@ -66,19 +66,6 @@ Dizzy.FindNearestRange = function(intValue, ranges)
     return last
 end
 
--- returns index in the arrays like Ranges,Dis_Chances,etc..
--- iQuality -- 2-green, 3-blue, 4-epic
-Dizzy.GetItemTableIndex = function(iQuality, iClass)
-    if iQuality<2 then return 0 end
-
-    -- (iQuality - 2)*2 => green=0, blue=2, epic=4
-    -- (+1) to shift in the array because its lua => 1,3,5
-    -- (+1) if weapon => 2,4,6
-    local rangeIndex = (iQuality - 2)*2 + 1
-    if iClass == "Weapon" then rangeIndex = rangeIndex+1 end
-    return rangeIndex
-end
-
 -- three arrays (chances, mats, quantities) are forming a total result of DE of an item
 
 Dizzy.Dis_Chances = {
@@ -144,25 +131,27 @@ Dizzy.Dis_Mats = {
         {{15, 0}, {25,51}, {30,52}, {35, 53}, {40, 54}, {45,55}, {50,56}, {55,57}, {65,58}, {99,59},
             {120,60},{151,61},{200,62},     {333, 0}, {700, 0}}
     },
-    -- Rare [1] - shards, [2] - crystals
+    -- Rare Armor [1] - shards, [2] - crystals
     {
         {{25, 51}, {30,52}, {35,53}, {40,54}, {45,55}, {50, 56}, {55,57}, {65,58}, {99,59}, {115,60}, {164,61},
             {200,62}, {316,63, 63}, {377,64,64}, {420, 65,65}, {463, 66,66},
             {630, 67, 68}, {700,0}},
         {{55, 0}, {99, 81}, {115, 82}, {200, 83}, {377,0},    {700,0}}
-    },{
+    },
+    -- Rare Weapon [1] - shards, [2] - crystals
+    {
         {{25, 51}, {30,52}, {35,53}, {40,54}, {45,55}, {50, 56}, {55,57}, {65,58}, {99,59}, {115,60}, {164,61},
             {200,62}, {316,63,63}, {377,64,64}, {420, 65,65},{463, 66,66},
             {630, 67, 68},    {700,0}},
         {{55, 0}, {99, 81}, {115, 82}, {164, 83}, {200, 83}, {377,0},    {700,0}}
     },
-    -- Epic
+    -- Epic Armor
     {
         {{39,0}, {45, 55}, {50, 56}, {55, 57}, {397, 0},  {700,0}},
         {{55,0}, {80, 81}, {164, 82}, {264,83}, {397,84},  {700,0}}
-    },{}
+    },
+    {} -- Epic Weapon - a copy of armor
 }
---Dizzy.Dis_Mats[4] = copy1(Dizzy.Dis_Mats[3])
 Dizzy.Dis_Mats[6] = copy1(Dizzy.Dis_Mats[5])
 
 
@@ -186,22 +175,25 @@ Dizzy.Dis_Counts = {
         {{60, "1-2"},  {99, "2-3"}, {99, "2-3"}, {200, "1-2"}, {300, "1-8"}, {317, "1-5"},{318, "?"},   {700,1}},
         {{15,0}, {200,1}, {700,1}}
     },
-    -- Rare [1] - shards, [2] - crystals
+    -- Rare Armor [1] - shards, [2] - crystals
     {
         {{200,1}, {316, 1,2}, {377, 1, 2}, {420, 1,2}, {463,1,2}, {630, "1-8?", "1-2?"},  {700,1}},
         {{55,0}, {200,1}, {377, 0},{700,1}}
-    },{},
-    -- Epic
+    }, -- weapon is a copy of armor
+    {},
+    -- Epic Armor
     {
         {{39, 0}, {55, "2-4"},  {397,0},   {700,1}},
         {{55, 0}, {60, "1"}, {100, "1-2"}, {164, 1,2}, {200,1}, {397, "1-2"},  {700,1}}
-    },{
+    },
+    -- Epic Armor
+    {
         {{39, 0}, {55, "2-4"},  {397,0},   {700,1}},
         {{55, 0}, {60, "1"}, {80, "1", "2"}, {100, "1-2"}, {164, 1,2}, {200,1}, {397, "1-2"},  {700,1}}
     }
 }
 Dizzy.Dis_Counts[4] = copy1(Dizzy.Dis_Counts[3])
---Dizzy.Dis_Counts[6] = copy1(Dizzy.Dis_Counts[5])
+
 
 Dizzy.GetItemDisLines = function(iLevel, iQuality, iClass, itemName, forDebug)
     if iLevel == 450 and string.find(itemName, "Contender's") then
@@ -252,43 +244,45 @@ end
 --   in debug mode return error/debug strings (never nil)
 Dizzy.GenerateDisMatLine = function(chanceInfo, matInfo, countInfo, forDebug)
     local result = {}
-    local chanceValue = chanceInfo[2]
-    local currentMat = matInfo[2];
-    local amountValue = countInfo[2];
+    local chance1 = chanceInfo[2]
+    local mat1 = matInfo[2];
+    local amount1 = countInfo[2];
 
-    local chanceOfSecondaryMat = chanceInfo[3]
-    local secondaryMat = matInfo[3];
-    local secondaryMatCount = countInfo[3];
+    local chance2 = chanceInfo[3] -- secondary material's chance
+    local mat2 = matInfo[3];      -- secondary material's id
+    local amount2 = countInfo[3]; -- secondary material's amount
 
-    if chanceValue and currentMat and amountValue then
-        if Dizzy.AnyZero({chanceValue, currentMat, amountValue}) then
-            if forDebug then
-                return {"Skip "..Dizzy.GenerateMaterialHref(currentMat).." "..tostring(chanceValue).."%  "..tostring(amountValue)}
-            else
-                return {}
-            end
+    if chance1 and mat1 and amount1 then
+        if Dizzy.AnyZero({ chance1, mat1, amount1 }, 3) then -- 0 indicates no DE for this dust/essence/shard/crystal
+            return forDebug and {"Skip "..Dizzy.GenerateMaterialHref(mat1).." "..tostring(chance1).."%  "..tostring(amount1)} or {}
         else
-            local str = ""..Dizzy.GenerateMaterialHref(currentMat).." "..tostring(chanceValue).."%"
-            if amountValue ~= 1 and amountValue ~= "1" then
-                str = str .. " ("..tostring(amountValue)..")"
+            local str = ""..Dizzy.GenerateMaterialHref(mat1).." "..tostring(chance1).."%"
+            if amount1 ~= 1 and amount1 ~= "1" then
+                str = str .. " ("..tostring(amount1)..")"
             end
             result[1] = str
+
+            -- secondary material/chance
+            if Dizzy.AnyNonEmpty({ chance2, mat2, amount2 }, 3) then
+                chance2, mat2, amount2 = Dizzy.MergeArrays({ chance1, mat1, amount1 }, { chance2, mat2, amount2 })
+                local str = ""..Dizzy.GenerateMaterialHref(mat2).." "..tostring(chance2).."%"
+                if amount2 ~= 1 and amount2 ~= "1" then
+                    str = str .. " ("..tostring(amount2)..")"
+                end
+                result[2] = str
+            end
         end
     else
-        if forDebug then
-            return {"Fail: mat="..tostring(currentMat).." chance="..tostring(chanceValue).." amount="..tostring()}
-        else
-            return nil
-        end
+        return forDebug and {"Fail: mat="..tostring(mat1).." chance="..tostring(chance1).." amount="..tostring()} or nil
     end
 
-    -- TODO secondary into result[2]
     return result
 end
 
-Dizzy.AnyZero = function(input)
-    for i,v in ipairs(input) do
-        if not v or v == 0 then return true end
+Dizzy.MergeArrays = function(arraySource, arrayTarget)
+    for k,v in ipairs(arraySource) do
+        if not arrayTarget[i] then arrayTarget[i] = v end
     end
-    return false
+    return unpack(arrayTarget)
 end
+

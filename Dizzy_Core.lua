@@ -23,49 +23,14 @@ Dizzy.Qualities = {
 }
 
 Dizzy.Ranges = {
-	--  f = from, t = to. actually, f is not important and is here only as a reminder
-	--                                 vanilla       BC            WotLK          Cata           Panda         wod
-	{name = "Green Armor",  ranges={ {f=5, t=65}, {f=79,t=120}, {f=130,t=200}, {f=272,t=333}, {f=364,t=445}, {f=509,t=700}}},
-	{name = "Green Weapon", ranges={ {f=6, t=65}, {f=80,t=120}, {f=130,t=200}, {f=272,t=318}, {f=364,t=445}, {f=509,t=700}}},
-	{name = "Blue Armor",   ranges={ {f=1, t=65}, {f=66,t=115}, {f=130,t=200}, {f=288,t=377}, {f=410,t=463}, {f=509,t=700}}},
-	{name = "Blue Weapon",  ranges={ {f=1, t=65}, {f=66,t=115}, {f=130,t=200}, {f=288,t=377}, {f=410,t=463}, {f=509,t=700}}},
-	{name = "Epic Armor",   ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=580}, {f=509,t=700}}},
-	{name = "Epic weapon",  ranges={ {f=40,t=83}, {f=95,t=164}, {f=165,t=277}, {f=352,t=397}, {f=420, t=580}, {f=509,t=700}}}
+	--   {from, to}                 vanilla     BC       WotLK      Cata       Panda       wod
+	{name = "Green Armor",  ranges={ {5,65}, {79,120}, {130,200}, {272,333}, {364,445}, {509,700}}},
+	{name = "Green Weapon", ranges={ {6,65}, {80,120}, {130,200}, {272,318}, {364,445}, {509,700}}},
+	{name = "Blue Armor",   ranges={ {1,65}, {66,115}, {130,200}, {288,377}, {410,463}, {509,700}}},
+	{name = "Blue Weapon",  ranges={ {1,65}, {66,115}, {130,200}, {288,377}, {410,463}, {509,700}}},
+	{name = "Epic Armor",   ranges={ {40,83}, {95,164}, {165,277}, {352,397}, {420,580}, {509,700}}},
+	{name = "Epic weapon",  ranges={ {40,83}, {95,164}, {165,277}, {352,397}, {420,580}, {509,700}}}
 }
-
-Dizzy.TillerItems = {}
--- Gifts
-Dizzy.TillerItems[79264] = {message = "Haohan or Tina Mudclaw would love this", members = {57402,58761}}
-Dizzy.TillerItems[79265] = {message = "Old Hillpaw or Chee Chee would love this", members = {58707,58709}}
-Dizzy.TillerItems[79266] = {message = "Fish Fellreed or Ella would love this", members = {58705,58647}}
-Dizzy.TillerItems[79267] = {message = "Jogu or Sho would love this", members = {58710,58708}}
-Dizzy.TillerItems[79268] = {message = "Farmer Fung or Gina Mudclaw would love this", members = {57298,58706}}
--- Food
-Dizzy.TillerItems[74642] = {message = "Haohan Mudclaw loves this dish", members = {57402}}
-Dizzy.TillerItems[74643] = {message = "Jogu loves this dish", members = {58710}}
-Dizzy.TillerItems[74644] = {message = "Gina Mudclaw loves this dish", members = {58706}}
-Dizzy.TillerItems[74645] = {message = "Sho loves this dish", members = {58708}}
-Dizzy.TillerItems[74647] = {message = "Chee Chee loves this dish", members = {58709}}
-Dizzy.TillerItems[74649] = {message = "Old Hillpaw loves this dish", members = {58707}}
-Dizzy.TillerItems[74651] = {message = "Ella loves this dish", members = {58647}}
-Dizzy.TillerItems[74652] = {message = "Tina Mudclaw loves this dish", members = {58761}}
-Dizzy.TillerItems[74654] = {message = "Farmer Fung loves this dish", members = {57298}}
-Dizzy.TillerItems[74655] = {message = "Fish Fellreed loves this dish", members = {58705}}
-
-Dizzy.TillerMembers = {}
-Dizzy.TillerMembers[57298] = {name = "Farmer Fung", fraction=1283}
-Dizzy.TillerMembers[58707] = {name = "Old Hillpaw", fraction=1276}
-Dizzy.TillerMembers[58705] = {name = "Fish Fellreed", fraction=1282}
-Dizzy.TillerMembers[58709] = {name = "Chee Chee", fraction=1277}
-Dizzy.TillerMembers[57402] = {name = "Haohan Mudclaw", fraction=1279}
-Dizzy.TillerMembers[58761] = {name = "Tina Mudclaw", fraction=1280}
-Dizzy.TillerMembers[58706] = {name = "Gina Mudclaw", fraction=1281}
-Dizzy.TillerMembers[58708] = {name = "Sho", fraction=1278}
-Dizzy.TillerMembers[58647] = {name = "Ella", fraction=1275}
-Dizzy.TillerMembers[58710] = {name = "Jogu", fraction=1273}
-
-Dizzy.TillerRepExaltedAt = 42000
-
 
 Dizzy.GetExpansionShortName = function(index)
 	if not index then return "???" end
@@ -75,6 +40,19 @@ Dizzy.GetExpansionShortName = function(index)
 
 	result = result.short
 	return result or "???"
+end
+
+-- returns index in the arrays like Ranges,Dis_Chances,etc..
+-- iQuality -- 2-green, 3-blue, 4-epic
+Dizzy.GetItemTableIndex = function(iQuality, iClass)
+    if iQuality<2 then return 0 end
+
+    -- (iQuality - 2)*2 => green=0, blue=2, epic=4
+    -- (+1) to shift in the array because its lua => 1,3,5
+    -- (+1) if weapon => 2,4,6
+    local rangeIndex = (iQuality - 2)*2 + 1
+    if iClass == "Weapon" then rangeIndex = rangeIndex+1 end
+    return rangeIndex
 end
 
 Dizzy.IsDizzy = function(iclass, isubclass, iquality)
@@ -95,16 +73,9 @@ Dizzy.IsDizzy1 = function(arguments)
             and quality >1 and quality <5 -- 2, 3, or 4
 end
 
-Dizzy.IsTillerItem = function(id)
-	if not id then return false end
-	
-	-- March lily, Lovely apple, food they love, etc...
-	if Dizzy.TillerItems[id] then return true else return false end
-end
-
 --[[
  intValue is value we are looking for in the ranges array
- ranges is list of pairs (from-to): { {f=5, t=65}, {f=79,t=120}, {f=130,t=200}, {f=272,t=333}, {f=364,t=445} }
+ ranges is list of pairs (from-to): { {5, 65}, {79,120}, {130,200}, {272,333}, {364,445} }
 
  returns index of the range where intValue "belongs" (starts from 1) and boolean indication of certainty.
    If intValue is not found in any of the ranges, then certainty is false and it picks the "approximate" range
@@ -117,8 +88,8 @@ end
 Dizzy.FindNearestIndex = function(intValue, ranges)
 	local last = 0;
 	for i,v in ipairs(ranges) do
-		if intValue <= v.t then
-			return i, (intValue>=v.f)
+		if intValue <= v[2] then
+			return i, (intValue>=v[1])
 		end
 		last = i
 	end
@@ -148,7 +119,6 @@ Dizzy.GetEpOfItemLevel = function(iLevel, iQuality, iClass)
 	return itemWep, sure
 end
 
-
 -- http://www.wowwiki.com/Disenchanting_tables
 
 --Dizzy.GetID = function (ilink)
@@ -164,6 +134,43 @@ end
 
 --print("" ..Dizzy.GetID("Coop|Hitem:123:456"))
 
+function range(a, b, step)
+    if not b then
+        b = a
+        a = 1
+    end
+    step = step or 1
+    local f =
+    step > 0 and
+            function(_, lastvalue)
+                local nextvalue = lastvalue + step
+                if nextvalue <= b then return nextvalue end
+            end or
+            step < 0 and
+            function(_, lastvalue)
+                local nextvalue = lastvalue + step
+                if nextvalue >= b then return nextvalue end
+            end or
+            function(_, lastvalue) return lastvalue end
+    return f, nil, a - step
+end
+
+Dizzy.AnyZero = function(input, count)
+    for i in range(count) do
+        local v = input[i]
+        if not v or v == 0 then return true end
+    end
+    return false
+end
+
+
+Dizzy.AnyNonZero = function(input, count)
+    for i in range(count) do
+        local v = input[i]
+        if v and v ~= 0 then return true end
+    end
+    return false
+end
 
 Dizzy.seen={}
 Dizzy.DumpGlobals = function(t,i)

@@ -1,7 +1,8 @@
 ## Interface: 60000
 ## Title: Disenchant Info
 ## Notes: Show disenchanting info based on item level
-Dizzy_Tables.lua
 Dizzy_Core.lua
+Dizzy_TillerTables.lua
+Dizzy_Tables.lua
 Dizzy_Debug.lua
 Dizzy.lua
