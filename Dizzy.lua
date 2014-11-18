@@ -51,7 +51,7 @@ Dizzy.UpdateFrameDis = function(item, frame)
 
 	frame:AddLine(itemEpStr, r, g, b, true)
 
-    if IsControlKeyDown() then
+    if Dizzy.IsShowKeyDown() then
         local messages = Dizzy.GetItemDisLines(item.ItemLevel, item.Quality, item.Class, item.Name, false)
         if (messages) then
             for i, message in ipairs(messages) do
@@ -179,6 +179,18 @@ Dizzy.DebugShowItem = function(item)
 	end		
 end
 
+Dizzy.IsShowKeyDown = function()
+    if (not DIZZY_SavedSettings) or type(DIZZY_SavedSettings) ~= "table" then return IsControlKeyDown() end
+
+    local key = DIZZY_SavedSettings["key"]
+
+    if key=="always" then return true
+    elseif key == "none" then return false
+    elseif key == "ctrl" then return IsControlKeyDown()
+    elseif key == "alt" then return IsAltKeyDown()
+    elseif key == "shift" then return IsShiftKeyDown()
+    else return IsControlKeyDown() end
+end
 Dizzy.ChangeSettings = function(key)
     DIZZY_SavedSettings["key"] = key
 end
