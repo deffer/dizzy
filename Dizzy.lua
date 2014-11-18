@@ -29,7 +29,7 @@ Dizzy.CacheItem = function(ilink)
     }
 end
 
-Dizzy.UpdateFrameEP = function(item, frame)
+Dizzy.UpdateFrameDis = function(item, frame)
 	-- |cffffff00(bright yellow)|r, |cff0070dd(rare item blue)|r, |cff40c040(easy quest green)|r
 	local userEP = Dizzy.GetEpOfUserLevel(item.ReqLevel)
 	local itemEP, sure = Dizzy.GetEpOfItemLevel(item.ItemLevel, item.Quality, item.Class)
@@ -209,7 +209,7 @@ Dizzy.ScriptOnTooltipSetItem = function(frame)
 	local iname,ilink = frame:GetItem();
 	local windowsName = frame:GetName()
 
-    local forDebug = false;
+    local forDebug = false; -- to prevent repeating display every second
 	if ((not Dizzy.LastSeen) or not (Dizzy.LastSeen.Link == ilink)) then
 		Dizzy.CacheItem(ilink)
         forDebug = true
@@ -218,7 +218,7 @@ Dizzy.ScriptOnTooltipSetItem = function(frame)
 	if Dizzy.LastSeen then
 		local item = Dizzy.LastSeen
 		if item.IsDizzy then
-			Dizzy.UpdateFrameEP(item, frame)
+			Dizzy.UpdateFrameDis(item, frame)
 		elseif item.OfTillersInterest then		
 			Dizzy.UpdateFrameTillers(item, frame)
 		end
@@ -241,8 +241,9 @@ local function SlashHandler(msg, editbox)
 	if command == "show" or command=="hide" then
 		Dizzy[command]()
 	elseif command == "help" then
+        print("Syntax: /dz use (alt|ctrl|shift|none|always) to change a hot key triggering display of disenchanting info")
+        print("Syntax: /dz (show|hide) to show or hide debug frame")
 		print("Syntax: /dz (frames|item|glob) to dump corresponding info into debug frame")
-		print("Syntax: /dz (show|hide) to show or hide debug frame")
 	elseif command == "frames" then
 		Dizzy.DebugShowFrames()
 	elseif command == "item" then
@@ -252,7 +253,7 @@ local function SlashHandler(msg, editbox)
     elseif command == "use" then
         if (rest == "") then print("Syntax: /dz use alt|ctrl|shift|none|always") else Dizzy.ChangeSettings(rest) end
     else
-		Dizzy.DebugShowItem()
+		print("Syntax: /dz help|show|hide|frames|item|glob|use")
 	end
 end
 SlashCmdList["DIZZY"] = SlashHandler;
@@ -263,4 +264,4 @@ Dizzy.CreateDebugFrame()
 if(type(DIZZY_SavedSettings) ~= "table") then DIZZY_SavedSettings = {} end
 
 
-DEFAULT_CHAT_FRAME:AddMessage("Dizzy is here...")
+DEFAULT_CHAT_FRAME:AddMessage("Dizzy is here... Use '/dz help' to change things.")

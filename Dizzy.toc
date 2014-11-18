@@ -1,8 +1,10 @@
 ## Interface: 60000
-## Title: Disenchant Info
-## Notes: Show disenchanting info based on item level
+## Title: Disenchant Or Not
+## Notes: Shows expansion and disenchanting related information based on item level. Plus Tiller notes.
+## SavedVariables: DIZZY_SavedSettings
 Dizzy_Core.lua
 Dizzy_TillerTables.lua
 Dizzy_Tables.lua
+Dizzy_NoDisTables.lua
 Dizzy_Debug.lua
 Dizzy.lua
