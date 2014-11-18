@@ -177,7 +177,7 @@ Dizzy.Dis_Counts = {
     },
     -- Rare Armor [1] - shards, [2] - crystals
     {
-        {{200,1}, {316, 1,2}, {377, 1, 2}, {424, 1,2}, {463,1,2}, {630, "1-8?", "1-2?"},  {700,1}},
+        {{200,1}, {316, 1,2}, {377, 1, 2}, {424, 1,2}, {476,1,2}, {630, "1-8?", "1-2?"},  {700,1}},
         {{55,0}, {200,1}, {377, 0},{700,0}}
     }, -- weapon is a copy of armor
     {},
@@ -281,7 +281,7 @@ end
 
 Dizzy.MergeArrays = function(arraySource, arrayTarget)
     for k,v in ipairs(arraySource) do
-        if not arrayTarget[i] then arrayTarget[i] = v end
+        if not arrayTarget[k] then arrayTarget[k] = v end
     end
     return unpack(arrayTarget)
 end
