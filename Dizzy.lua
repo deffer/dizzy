@@ -15,15 +15,14 @@ Dizzy.GetID = function(ilink)
 end
 
 Dizzy.CacheItem = function(ilink)
-	local name, link,
-	iQuality, iLevel, reqLevel,
-	iclass, isubclass,
-	maxStack, equipSlot, texture, vendorPrice = GetItemInfo(ilink)
+    local args = {GetItemInfo(ilink)}
+	local name, link, iQuality, iLevel, reqLevel,
+	iclass, isubclass, maxStack, equipSlot, texture, vendorPrice = unpack(args)
 	local itemid = Dizzy.GetID(link)
 	Dizzy.LastSeen = {Name = name, Link = link, Id = itemid,
 		Class = iclass, SubClass = isubclass, 
 		Quality=iQuality, ItemLevel = iLevel, ReqLevel = reqLevel,
-		IsDizzy = Dizzy.IsDizzy(iclass, isubclass, iQuality),
+		IsDizzy = Dizzy.IsDizzy(args, itemid),
 		OfTillersInterest = Dizzy.IsTillerItem(itemid),
         DisplayLines = nil -- to indicate no info yet
     }
@@ -49,7 +48,7 @@ Dizzy.UpdateFrameDis = function(item, frame)
 	end
 	--itemEpStr = itemEpStr.." "..tostring(itemEP).." > "..tostring(userEP).." ("..item.ItemLevel..","..item.Quality..","..item.Class..")"
 
-	frame:AddLine(itemEpStr, r, g, b, true)
+	frame:AddLine("["..itemEpStr.."]", r, g, b, true)
 
     if Dizzy.IsShowKeyDown() then
         local messages = Dizzy.GetItemDisLines(item.ItemLevel, item.Quality, item.Class, item.Name, false)
@@ -144,7 +143,7 @@ Dizzy.DebugShowItem = function(item)
 			maxStack, equipSlot, texture, vendorPrice = unpack(itemInfo)
 		local itemid = Dizzy.GetID(link)
 		Dizzy.Debug(ilink.." - "..itemid.."  ilevel "..tostring(iLevel).."  req "..reqLevel)
-		local dizFlag = Dizzy.IsDizzy1(itemInfo) and "DE" or "non-DE"
+		local dizFlag = Dizzy.IsDizzy(itemInfo, itemid) and "DE" or "non-DE"
 		local tillersFlag = Dizzy.IsTillerItem(itemid) and "Tillers" or "Not tiller"
 		local str = ""..iclass.." ("..tostring(isubclass)..") quality "..quality..", price "..vendorPrice..", "..dizFlag..", "..tillersFlag
 		Dizzy.Debug(str)

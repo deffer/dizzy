@@ -55,18 +55,11 @@ Dizzy.GetItemTableIndex = function(iQuality, iClass)
     return rangeIndex
 end
 
-Dizzy.IsDizzy = function(iclass, isubclass, iquality)
-	-- todo there will be some exceptions, like world even bosses drop, PvP equip, Mist-Piercing Goggles, Terracota Fragment, etc
-	return (iclass == "Weapon" or iclass == "Armor") and isubclass ~= "Fishing Poles"
-		and iquality >1 and iquality <5 -- 2, 3, or 4
-end
-
-Dizzy.IsDizzy1 = function(arguments)
--- todo there will be some exceptions, like world even bosses drop, PvP equip, Mist-Piercing Goggles, etc
-    local iname, ilink,
-    quality, iLevel, reqLevel,
-    iclass, isubclass,
+Dizzy.IsDizzy = function(arguments, itemid)
+    local iname, ilink, quality, iLevel, reqLevel, iclass, isubclass,
     maxStack, equipSlot, texture, vendorPrice = unpack(arguments)
+
+    if Dizzy.NoDis[itemid] == 1 then return false end
 
     return (iclass == "Weapon" or iclass == "Armor") and isubclass ~= "Fishing Poles"
             and maxStack==1 and vendorPrice > 10 -- todo is it string??
