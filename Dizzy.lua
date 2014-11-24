@@ -179,19 +179,26 @@ Dizzy.DebugShowItem = function(item)
 end
 
 Dizzy.IsShowKeyDown = function()
-    if (not DIZZY_SavedSettings) or type(DIZZY_SavedSettings) ~= "table" then return IsControlKeyDown() end
+    --if (not DIZZY_SavedSettings) or type(DIZZY_SavedSettings) ~= "table" then return IsControlKeyDown() end
 
     local key = DIZZY_SavedSettings["key"]
 
     if key=="always" then return true
-    elseif key == "none" then return false
+    elseif key == "none" or key=="never" then return false
     elseif key == "ctrl" then return IsControlKeyDown()
     elseif key == "alt" then return IsAltKeyDown()
     elseif key == "shift" then return IsShiftKeyDown()
     else return IsControlKeyDown() end
 end
+
 Dizzy.ChangeSettings = function(key)
     DIZZY_SavedSettings["key"] = key
+end
+
+Dizzy.IsShowDebugFrameConfigured = function()
+    --if (not DIZZY_SavedSettings) or type(DIZZY_SavedSettings) ~= "table" then return false end
+    if DIZZY_SavedSettings["show"] == nil then return false end
+    return DIZZY_SavedSettings["show"] == true or DIZZY_SavedSettings["show"] == "true"
 end
 
 Dizzy.HookOntoTooltipFrame = function()
@@ -250,11 +257,12 @@ local function SlashHandler(msg, editbox)
 	-- Any leading non-whitespace is captured into command, the rest (minus leading whitespace) is captured into rest
 	local command, rest = msg:match("^(%S*)%s*(.-)$")
 	if command == "show" or command=="hide" then
+        DIZZY_SavedSettings["show"] = (command == "show")
 		Dizzy[command]()
 	elseif command == "help" then
-        print("Syntax: /dz use (alt|ctrl|shift|none|always) to change a hot key triggering display of disenchanting info")
-        print("Syntax: /dz (show|hide) to show or hide debug frame")
-		print("Syntax: /dz (frames|item|glob) to dump corresponding info into debug frame")
+        print("Syntax: /dz use (alt|ctrl|shift|none|always) - to change a hot key triggering display of disenchanting info")
+        print("Syntax: /dz (show|hide) to show or hide debug frame") -- TODO remove in release
+		print("Syntax: /dz (frames|item|glob) to dump corresponding info into debug frame") -- TODO remove in release
 	elseif command == "frames" then
 		Dizzy.DebugShowFrames()
 	elseif command == "item" then
@@ -264,7 +272,7 @@ local function SlashHandler(msg, editbox)
     elseif command == "use" then
         if (rest == "") then print("Syntax: /dz use alt|ctrl|shift|none|always") else Dizzy.ChangeSettings(rest) end
     else
-		print("Syntax: /dz help|show|hide|frames|item|glob|use")
+		print("Syntax: /dz help|use|show|hide|frames|item|glob") -- TODO change in release
 	end
 end
 SlashCmdList["DIZZY"] = SlashHandler;
@@ -275,4 +283,4 @@ Dizzy.CreateDebugFrame()
 if(type(DIZZY_SavedSettings) ~= "table") then DIZZY_SavedSettings = {} end
 
 
-DEFAULT_CHAT_FRAME:AddMessage("Dizzy is here... Use '/dz help' to change things.")
+DEFAULT_CHAT_FRAME:AddMessage("Dizzy is here... Use '/dz use' to change key binding")

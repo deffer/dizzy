@@ -121,7 +121,7 @@ local createDebugFrame = function()
 	f:RegisterEvent("PLAYER_ENTERING_WORLD")
 	f:SetScript("OnEvent", function(self, event, ...)
 		if event == "PLAYER_ENTERING_WORLD" then
-			self:Show()
+            if Dizzy.IsShowDebugFrameConfigured() then self:Show() end
 		end
 	end)
 
